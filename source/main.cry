@@ -1,0 +1,367 @@
+﻿/**/
+import Game;
+import Graphics2D;
+import Random;
+import Math;
+import Graphics2DText;
+import Dispatcher;
+import ImageResources;
+
+function sum(list){
+	total=0;
+	for(value:list){
+		total+=value;
+	}
+	return total;
+}
+
+
+function new_board(boardsize){
+	board=[[]]*boardsize;
+	solution=[[]]*boardsize;
+	wires=[[]]*boardsize;
+	for(x=0;x<boardsize;x++){
+		board[x]=[[]]*boardsize;
+		solution[x]=[[]]*boardsize;
+		wires[x]=[].clone();
+		for(y=0;y<boardsize;y++){
+		wires[x].add([x,y]);
+		}
+	}
+
+	swapcount=0;
+	for(iteration=0;iteration<300;iteration++){
+		choice=Random.randomInt(0,boardsize);
+		if(wires[choice].length<4){
+			continue;
+		}
+		if(Random.randomBool()){
+				for(i=0;i<boardsize;i++){
+					if(i!=choice){
+					if(Math.abs(wires[i][-1][0]-wires[choice][-1][0])+Math.abs(wires[i][-1][1]-wires[choice][-1][1])==1){
+						wires[i].add(wires[choice][-1]);
+						wires[choice].pop();
+						swapcount++;
+						break;
+					}else if(Math.abs(wires[i][0][0]-wires[choice][-1][0])+Math.abs(wires[i][0][1]-wires[choice][-1][1])==1){
+						wires[i].insert(0,wires[choice][-1]);
+						wires[choice].pop();
+						swapcount++;
+						break;
+					}
+					}
+				}
+		}else{
+			for(i=0;i<boardsize;i++){
+					if(i!=choice){
+					if(Math.abs(wires[i][0][0]-wires[choice][0][0])+Math.abs(wires[i][0][1]-wires[choice][0][1])==1){
+						wires[i].insert(0,wires[choice][0]);
+						wires[choice].remove(0);
+						swapcount++;
+						break;
+					}else if(Math.abs(wires[i][-1][0]-wires[choice][0][0])+Math.abs(wires[i][-1][1]-wires[choice][0][1])==1){
+						wires[i].add(wires[choice][0]);
+						wires[choice].remove(0);
+						swapcount++;
+						break;
+					}
+					}
+			}
+		}
+		
+	}
+	for(x=0;x<boardsize;x++){
+		for(y=0;y<boardsize;y++){
+			board[x][y]=-1;
+		}
+	}
+	for(i=0;i<boardsize;i++){
+			board[wires[i][0][0]][wires[i][0][1]]=i;
+			board[wires[i][-1][0]][wires[i][-1][1]]=i;
+	}
+	nodes=[[]]*boardsize;
+	for(i=0;i<boardsize;i++){
+			nodes[i]=[].clone();
+			nodes[i].add(wires[i][0]);
+			nodes[i].add(wires[i][-1]);
+	}
+		
+	
+	for(i=0;i<boardsize;i++){
+		for(coord:wires[i]){
+			solution[coord[0]][coord[1]]=i;
+			}
+	}
+	
+	
+
+
+	return nodes;
+}
+
+function board_coord(x,y,x_offset,y_offset,blocksize,boardsize){
+	if(x>x_offset&&x<(x_offset+(blocksize*boardsize))&&y>y_offset&&y<(y_offset+(blocksize*boardsize))){
+		return [(x-x_offset)/blocksize,(y-y_offset)/blocksize];
+	}
+	return [-1,-1];
+}
+
+
+
+function main() {
+  title = "Accelerative";
+  fps = 30;
+  windowWidth = 800;
+  windowHeight = 600;
+  window = new Game.GameWindow(title, fps, windowWidth, windowHeight);
+  renderer=FontResource.fromSystem("Arial").getRenderer();
+  dstm.load();
+
+  boardwidth=300;
+  boardsize=6;
+  blocksize=boardwidth/boardsize;
+  margin=(boardwidth-(blocksize*boardsize))/2;
+  startnodesize=(blocksize/4)*3;
+  startnodepadding=(blocksize-startnodesize)/2;
+  endnodesize=(blocksize/5)*4;
+  endnodepadding=(blocksize-endnodesize)/2;
+  endnodecutoutsize=(blocksize/3);
+  endnodecutoutpadding=(blocksize-endnodecutoutsize)/2;
+  wiresize=(blocksize/3);
+  wirepadding=(blocksize-wiresize)/2;
+  boardxoffset=(windowWidth-boardwidth)/2;
+  boardyoffset=(windowHeight-boardwidth-10);
+  
+  radarxoffset=25;
+  radaryoffset=300;
+  radarwidth=175;
+  radarheight=175;
+  radarradius=80;
+  incoming_ships=[];
+  active_sector=1;
+
+  scan_count=0;
+  
+  firebuttonxoffset=92;
+  firebuttonyoffset=482;
+  firebuttonradius=40;
+  
+  shield_set=1;
+  asteroids=[];
+
+  
+  starfield=[];
+  for(i=0;i<60;i++){
+	starfield.add(new star(windowWidth,0,255));
+  }
+  
+  color_index={"red":[255,0,0],"blue":[0,0,255],"green":[0,255,0],"yellow":[255,255,0],"orange":[255,100,0],"white":[255,255,255],"indigo":[0,255,255],"purple":[150,0,255],"pink":[255,100,100],"brown":[150,90,20],"magenta":[255,0,255],"olive":[0,150,0],"sky":[100,100,255],"beige":[255,200,200]};
+  colors=["red","orange","yellow","green","indigo","blue","purple","white","pink","brown","magenta","olive","sky","beige"];
+  pallet=colors.map(color_index.get);
+  
+  
+  textrender=FontResource.fromSystem("Consolas").getRenderer().setColor(255,255,255).setSize(15).setStyle(FontStyle.BOLD_ITALIC);
+  accentrender=FontResource.fromSystem("Consolas").getRenderer().setColor(50,50,50).setSize(15).setStyle(FontStyle.BOLD_ITALIC);
+  
+  wirelabel=textrender.render("WIREMASTER/3000XP");
+  wirelabelaccent=accentrender.render("WIREMASTER/3000XP");
+  
+  gunlabel=textrender.render("SHOOT-SHOOTY v2");
+  gunlabelaccent=accentrender.render("SHOOT-SHOOTY v2");
+  
+  shieldlabel=textrender.render("ROCK BLOCKER");
+  shieldlabelaccent=accentrender.render("ROCK BLOCKER");
+  
+  Dispatcher.setRecurringCallback(()=>{active_sector++;active_sector=active_sector%8;},0.5);
+  Dispatcher.setRecurringCallback(()=>{if(Random.randomInt(0,6)==0){incoming_ships.add(new ship(Random.randomInt(0,8)));}},3.0);
+  Dispatcher.setRecurringCallback(()=>{if(Random.randomInt(0,3)==0){asteroids.add(new asteroid(Random.randomInt(0,3)));}},5.0);
+  Dispatcher.setRecurringCallback(laser.animate,0.1);
+  
+  activewire=-1;
+  pallet.shuffle();
+  wires=[];
+  nodes=new_board(boardsize);
+  for(i=0;i<boardsize;i++){
+	wires.add(new wire(nodes[i][0],nodes[i][1]));
+  }
+
+  last_coords=[-1,-1];
+  while (true) {
+    events = window.pumpEvents();
+    for (event : events) {
+      if (event.type == Game.EventType.QUIT) {
+        return;
+      }
+	  if(event.type==Game.EventType.MOUSE_LEFT_DOWN){
+			click_coord=board_coord(event.x,event.y,boardxoffset+margin,boardyoffset+margin,blocksize,boardsize);
+			if(click_coord[0]!=-1){
+			//If on a start node, set the active wire and create a new attempt
+			for(i=0;i<boardsize;i++){
+				if(wires[i].isStartNodeByCoord(click_coord)){
+					activewire=i;
+					wires[i].newAttempt();
+					break;
+				}
+			}
+			}else{
+				//Fire the shooty shoot
+				if(event.x>firebuttonxoffset&&event.y>firebuttonyoffset&&event.x<(firebuttonxoffset+firebuttonradius)&&event.y<(firebuttonyoffset+firebuttonradius)){
+					laser.fire();
+					incoming_ships=incoming_ships.filter((q)=>{q.purge(active_sector);});
+				}else if(event.y>radaryoffset+radarheight+10&&event.y<radaryoffset+radarheight+40&&event.x>windowWidth-radarxoffset-radarwidth+10&&event.x<windowWidth-radarxoffset-radarwidth+(2*(radarwidth/3))+((radarwidth-30)/3)){
+					shield_set=(event.x-(windowWidth-radarxoffset-radarwidth+1))/((radarwidth/3)+10);
+				}
+				
+			}
+
+	  }
+	  if(event.type==Game.EventType.MOUSE_LEFT_UP){
+			activewire=-1;
+	  }
+	  if(event.type== Game.EventType.MOUSE_MOVE){
+		click_coord=board_coord(event.x,event.y,boardxoffset+margin,boardyoffset+margin,blocksize,boardsize);
+		if(activewire>=0&&(click_coord[0]!=last_coords[0]||click_coord[1]!=last_coords[1])){
+			last_coords=click_coord.clone();
+			if(!wires.map((wire)=>{return wire!=wires[activewire]&&(wire.pointExistsByCoord(click_coord)||wire.isNodeByCoord(click_coord));}).contains(true)){
+					wires[activewire].newPointByCoord(click_coord);
+					if(wires[activewire].isEndNodeByCoord(click_coord)){
+						activewire=-1;
+					}
+			}else{
+			activewire=-1;
+		}
+		}
+			/*
+				if(not node of different color or another wire){
+					add it
+				}
+			*/
+		}
+	  }
+   
+
+    Graphics2D.Draw.fill(0, 0, 0); // fill the screen with black
+	Graphics2D.Draw.rectangle(0,255,windowWidth,windowHeight-255,100,100,100);
+	
+	// WIREMASTER BOARD
+	
+	//Do the board
+	Graphics2D.Draw.rectangle((windowWidth-350)/2,260,350,windowHeight-260,150,150,150);
+	Graphics2D.Draw.triangle((windowWidth-350)/2,260,(windowWidth-350)/2,280,((windowWidth-350)/2)+20,260,100,100,100);
+	Graphics2D.Draw.triangle(((windowWidth-350)/2)+350,260,((windowWidth-350)/2)+330,260,((windowWidth-350)/2)+350,280,100,100,100);
+	wirelabelaccent.draw(boardxoffset+18,258);
+	wirelabel.draw(boardxoffset+20,260);
+	Graphics2D.Draw.rectangle(boardxoffset,boardyoffset,boardwidth,boardwidth,100,100,100);
+	for(x=0;x<boardsize;x++){
+		for(y=0;y<boardsize;y++){
+			Graphics2D.Draw.rectangle((x*blocksize)+margin+boardxoffset+1,(y*blocksize)+margin+boardyoffset+1,blocksize-2,blocksize-2,50,50,50);
+	}
+	}
+	
+	//Do the nodes
+	for(i=0;i<boardsize;i++){
+			Graphics2D.Draw.rectangle((wires[i].getStartNode()[0]*blocksize)+margin+boardxoffset+1,(wires[i].getStartNode()[1]*blocksize)+margin+boardyoffset+1,blocksize-2,blocksize-2,50,50,50);
+			Graphics2D.Draw.rectangle((wires[i].getStartNode()[0]*blocksize)+margin+startnodepadding+boardxoffset+1,(wires[i].getStartNode()[1]*blocksize)+margin+startnodepadding+boardyoffset+1,startnodesize,startnodesize,pallet[i][0],pallet[i][1],pallet[i][2]);
+			Graphics2D.Draw.rectangle((wires[i].getEndNode()[0]*blocksize)+margin+boardxoffset+1,(wires[i].getEndNode()[1]*blocksize)+margin+boardyoffset+1,blocksize-2,blocksize-2,50,50,50);
+			Graphics2D.Draw.rectangle((wires[i].getEndNode()[0]*blocksize)+margin+endnodepadding+boardxoffset+1,(wires[i].getEndNode()[1]*blocksize)+margin+endnodepadding+boardyoffset+1,endnodesize,endnodesize,pallet[i][0],pallet[i][1],pallet[i][2]);
+			Graphics2D.Draw.rectangle((wires[i].getEndNode()[0]*blocksize)+margin+endnodecutoutpadding+boardxoffset+1,(wires[i].getEndNode()[1]*blocksize)+margin+endnodecutoutpadding+boardyoffset+1,endnodecutoutsize,endnodecutoutsize,50,50,50);
+	}
+	
+	//Do the wires
+	for(i=0;i<boardsize;i++){
+			for(segment:wires[i].getPoints()){
+				Graphics2D.Draw.rectangle((segment[0]*blocksize)+margin+boardxoffset+wirepadding+1,(segment[1]*blocksize)+margin+boardyoffset+wirepadding+1,wiresize,wiresize,pallet[i][0],pallet[i][1],pallet[i][2]);
+				if(wires[i].isComplete()){
+				Graphics2D.Draw.rectangle((segment[0]*blocksize)+margin+boardxoffset+1+((1+wires[i].junctionByCoord(segment)[0][0])*wirepadding),(segment[1]*blocksize)+margin+boardyoffset+1+((1+wires[i].junctionByCoord(segment)[0][1])*wirepadding),wiresize,wiresize,pallet[i][0],pallet[i][1],pallet[i][2]);
+				Graphics2D.Draw.rectangle((segment[0]*blocksize)+margin+boardxoffset+1+((1+wires[i].junctionByCoord(segment)[1][0])*wirepadding),(segment[1]*blocksize)+margin+boardyoffset+1+((1+wires[i].junctionByCoord(segment)[1][1])*wirepadding),wiresize,wiresize,pallet[i][0],pallet[i][1],pallet[i][2]);
+				}
+	}
+	}
+	
+	
+	//Radar Label
+	gunlabelaccent.draw(radarxoffset-15,radaryoffset-40);
+	gunlabel.draw(radarxoffset-13,radaryoffset-38);
+	
+	//Radar Box
+	Graphics2D.Draw.rectangle(radarxoffset,radaryoffset,radarwidth,radarheight,150,150,150);
+	Graphics2D.Draw.triangle(radarxoffset,radaryoffset,radarxoffset+20,radaryoffset,radarxoffset,radaryoffset+20,100,100,100);
+	Graphics2D.Draw.triangle(radarxoffset+radarwidth,radaryoffset,radarxoffset+radarwidth-20,radaryoffset,radarxoffset+radarwidth,radaryoffset+20,100,100,100);
+	Graphics2D.Draw.triangle(radarxoffset,radaryoffset+radarheight,radarxoffset+20,radaryoffset+radarheight,radarxoffset,radaryoffset+radarheight-20,100,100,100);
+	Graphics2D.Draw.triangle(radarxoffset+radarwidth,radaryoffset+radarheight,radarxoffset+radarwidth-20,radaryoffset+radarheight,radarxoffset+radarwidth,radaryoffset+radarheight-20,100,100,100);
+	
+	//Radar
+	for(i=0;i<(2*Math.PI);i+=(Math.PI/4)){
+		Graphics2D.Draw.triangle(radarxoffset+(radarwidth/2),radaryoffset+(radarheight/2),radarxoffset+(radarwidth/2)+(Math.cos(i)*(radarradius+5)),radaryoffset+(radarheight/2)+(Math.sin(i)*(radarradius+5)),radarxoffset+(radarwidth/2)+(Math.cos(i+(Math.PI/4))*(radarradius+5)),radaryoffset+(radarheight/2)+(Math.sin(i+(Math.PI/4))*(radarradius+5)),0,100,0);
+		Graphics2D.Draw.triangle(radarxoffset+(radarwidth/2),radaryoffset+(radarheight/2),radarxoffset+(radarwidth/2)+(Math.cos(i)*radarradius),radaryoffset+(radarheight/2)+(Math.sin(i)*radarradius),radarxoffset+(radarwidth/2)+(Math.cos(i+(Math.PI/4))*radarradius),radaryoffset+(radarheight/2)+(Math.sin(i+(Math.PI/4))*radarradius),0,255,0);
+		Graphics2D.Draw.line(radarxoffset+(radarwidth/2)+(Math.cos(i)*radarradius),radaryoffset+(radarheight/2)+(Math.sin(i)*radarradius),radarxoffset+(radarwidth/2)-(Math.cos(i)*radarradius),radaryoffset+(radarheight/2)-(Math.sin(i)*radarradius),2,0,100,0,255);
+	}
+	Graphics2D.Draw.line(radarxoffset+(radarwidth/2),radaryoffset+(radarheight/2),radarxoffset+(radarwidth/2)+(20*Math.cos((active_sector*(Math.PI/4))+(Math.PI/8))),radaryoffset+(radarheight/2)+(20*Math.sin((active_sector*(Math.PI/4))+(Math.PI/8))),5,100,100,255,255);
+	Graphics2D.Draw.ellipse(firebuttonxoffset,firebuttonyoffset,firebuttonradius,firebuttonradius,255,0,0);
+	
+	incoming_ships.map((q)=>{q.draw_self(radarxoffset+(radarwidth/2),radaryoffset+(radarheight/2));});
+	
+	//Shields
+	Graphics2D.Draw.rectangle(windowWidth-radarxoffset-radarwidth,radaryoffset,radarwidth,radarheight,150,150,150);
+	Graphics2D.Draw.triangle(windowWidth-radarxoffset,radaryoffset,windowWidth-(radarxoffset+20),radaryoffset,windowWidth-radarxoffset,radaryoffset+20,100,100,100);
+	Graphics2D.Draw.triangle(windowWidth-(radarxoffset+radarwidth),radaryoffset,windowWidth-(radarxoffset+radarwidth-20),radaryoffset,windowWidth-(radarxoffset+radarwidth),radaryoffset+20,100,100,100);
+	Graphics2D.Draw.triangle(windowWidth-radarxoffset,radaryoffset+radarheight,windowWidth-(radarxoffset+20),radaryoffset+radarheight,windowWidth-radarxoffset,radaryoffset+radarheight-20,100,100,100);
+	Graphics2D.Draw.triangle(windowWidth-(radarxoffset+radarwidth),radaryoffset+radarheight,windowWidth-(radarxoffset+radarwidth-20),radaryoffset+radarheight,windowWidth-(radarxoffset+radarwidth),radaryoffset+radarheight-20,100,100,100);
+	
+	Graphics2D.Draw.rectangle(windowWidth-radarxoffset-radarwidth+10,radaryoffset+20,((radarwidth-30)/3)-10,radarheight-40,0,150,0);
+	Graphics2D.Draw.rectangle(windowWidth-radarxoffset-radarwidth+(radarwidth/3)+10,radaryoffset+20,((radarwidth-30)/3)-10,radarheight-40,0,150,0);
+	Graphics2D.Draw.rectangle(windowWidth-radarxoffset-radarwidth+(radarwidth/3)+(radarwidth/3)+10,radaryoffset+20,((radarwidth-30)/3)-10,radarheight-40,0,150,0);
+	
+	shieldlabelaccent.draw(603,258);
+	shieldlabel.draw(605,260);
+	
+	Graphics2D.Draw.rectangle(windowWidth-radarxoffset-radarwidth+10,radaryoffset+radarheight+10,((radarwidth-30)/3)-10,30,255,255,255);
+	Graphics2D.Draw.rectangle(windowWidth-radarxoffset-radarwidth+(radarwidth/3)+10,radaryoffset+radarheight+10,((radarwidth-30)/3)-10,30,255,255,255);
+	Graphics2D.Draw.rectangle(windowWidth-radarxoffset-radarwidth+(radarwidth/3)+(radarwidth/3)+10,radaryoffset+radarheight+10,((radarwidth-30)/3)-10,30,255,255,255);
+	
+	Graphics2D.Draw.rectangle(windowWidth-radarxoffset-radarwidth+10+((radarwidth/3)*shield_set),radaryoffset+radarheight-30,((radarwidth-30)/3)-10,10,255,255,255);
+	
+	asteroids.map((q)=>{q.draw_self((windowWidth-radarxoffset-radarwidth+10)+((((radarwidth-30)/3)-10)/2),(windowWidth-radarxoffset-radarwidth+(radarwidth/3)+10)+((((radarwidth-30)/3)-10)/2),(windowWidth-radarxoffset-radarwidth+(radarwidth/3)+(radarwidth/3)+10)+((((radarwidth-30)/3)-10)/2),radaryoffset+30);});
+	asteroids=asteroids.filter((q)=>{q.unblocked(shield_set);});
+	
+	if(asteroids.map((q)=>{return q.hit();}).contains(true)){
+		return;
+	}
+	if(incoming_ships.map((q)=>{return q.hit();}).contains(true)){
+		return;
+	}
+	starfield.map((q)=>{q.flow();});
+	
+	dstm.draw();
+	laser.animate();
+	
+
+	
+	if(!wires.map((wire)=>{return wire.isComplete();}).contains(false)&&sum(wires.map((wire)=>{return wire.getLength();}))==(boardsize**2)){
+		activewire=-1;
+		pallet.shuffle();
+		dstm.boost();
+		wires=[];
+		print("Board Cleared");
+		starfield.map((q)=>{q.setspeed(10.0);});
+		boardsize=Random.randomInt(5,10);
+		  blocksize=boardwidth/boardsize;
+			margin=(boardwidth-(blocksize*boardsize))/2;
+			startnodesize=(blocksize/4)*3;
+			startnodepadding=(blocksize-startnodesize)/2;
+			endnodesize=(blocksize/5)*4;
+			endnodepadding=(blocksize-endnodesize)/2;
+			endnodecutoutsize=(blocksize/3);
+			endnodecutoutpadding=(blocksize-endnodecutoutsize)/2;
+			wiresize=(blocksize/3);
+			wirepadding=(blocksize-wiresize)/2;
+			boardxoffset=(windowWidth-boardwidth)/2;
+			boardyoffset=(windowHeight-boardwidth-10);
+		nodes=new_board(boardsize);
+		for(i=0;i<boardsize;i++){
+			wires.add(new wire(nodes[i][0],nodes[i][1]));
+		}
+	}
+    window.clockTick();
+  }
+}

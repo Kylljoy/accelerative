@@ -1,0 +1,143 @@
+/**/
+import Math;
+
+class wire{
+	field points=[];
+	field startnode;
+	field endnode;
+	constructor(nodea,nodeb){
+		this.startnode=nodea.clone();
+		this.endnode=nodeb.clone();
+	}
+	
+	function getStartNode(){
+		return this.startnode.clone();
+	}
+	
+	function getEndNode(){
+		return this.endnode.clone();
+	}
+	
+	function isNode(x,y){
+		if(x==this.startnode[0]&&y==this.startnode[1]){
+			return true;
+		}
+		if(x==this.endnode[0]&&y==this.endnode[1]){
+			return true;
+		}
+			return false;
+			
+	}
+	
+	function isStartNode(x,y){
+		return (x==this.startnode[0]&&y==this.startnode[1]);
+	}
+	
+	function isEndNode(x,y){
+		return (x==this.endnode[0]&&y==this.endnode[1]);
+	}
+	
+	function isStartNodeByCoord(coord){
+		return this.isStartNode(coord[0],coord[1]);
+	}
+	
+	function isEndNodeByCoord(coord){
+		return this.isEndNode(coord[0],coord[1]);
+	}
+	
+	function isNodeByCoord(coord){
+		return this.isNode(coord[0],coord[1]);
+	}
+	
+	function pointExists(x,y){
+		if(this.points.length<1){
+			return false;
+		}
+		for(point:this.points){
+			if(point[0]==x&&point[1]==y){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	function pointExistsByCoord(coord){
+		return this.pointExists(coord[0],coord[1]);
+	}
+	
+	function isHeadPoint(x,y){
+		return (this.points[-1][0]==x&&this.points[-1][1]==y);
+	}
+	
+	function getIndexByPoint(x,y){
+		for(i=0;i<this.points.length;i++){
+			if(this.points[i][0]==x&&this.points[i][1]==y){
+				return i;
+			}
+		}
+	}
+	
+	function addPoint(x,y){
+		this.points.add([x,y]);
+	}
+	
+	function getPoints(){
+		return this.points.clone();
+	}
+	
+	function getPointsAndNodes(){
+		return this.points.clone()+[this.startnode.clone()+this.endnode.clone()];
+	}
+	
+	function addPointByCoord(coord){
+		this.addPoint(coord[0],coord[1]);
+	}
+	
+	function purgeFromIndex(index){
+		for(i=this.points.length-index-1;i>0;i--){
+			this.points.pop();
+		}
+	}
+	
+	function getLength(){
+		return this.points.length;
+	}
+	
+	function newAttempt(){
+		this.points.clear();
+		this.points.add(this.startnode.clone());
+	}
+	
+	function newPoint(x,y){
+		if(this.pointExists(x,y)&&!this.isHeadPoint(x,y)){
+			this.purgeFromIndex(this.getIndexByPoint(x,y));
+		}else if((Math.abs(this.points[-1][0]-x)+Math.abs(this.points[-1][1]-y))==1){
+			this.addPoint(x,y);
+		}
+	}
+	
+	function newPointByCoord(coord){
+		this.newPoint(coord[0],coord[1]);
+	}
+	
+	function junction(x,y){
+		if(this.getIndexByPoint(x,y)<(this.points.length-1)&&this.getIndexByPoint(x,y)>0){
+		return [[this.points[this.getIndexByPoint(x,y)-1][0]-x,this.points[this.getIndexByPoint(x,y)-1][1]-y],[this.points[this.getIndexByPoint(x,y)+1][0]-x,this.points[this.getIndexByPoint(x,y)+1][1]-y]];
+		}else{
+			return [[0,0],[0,0]];
+		}
+	}
+	
+	function junctionByCoord(coord){
+		return this.junction(coord[0],coord[1]);
+	}
+	
+	function isComplete(){
+		return this.points.length>0&&this.endnode[0]==this.points[-1][0]&&this.endnode[1]==this.points[-1][1];
+	}
+	
+	
+	
+
+
+}

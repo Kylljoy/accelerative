@@ -1,0 +1,36 @@
+import Math;
+import Graphics2D;
+import Dispatcher;
+
+class ship{
+	field sector;
+	field distance=69;
+	field movecount=0;
+	
+	constructor(sector){
+		this.sector=sector;
+		Dispatcher.setRecurringCallback(this.closer,0.5);
+	}
+	
+	function hit(){
+		return this.distance<0;
+	}
+	
+	
+	function closer(){
+		this.distance--;
+	}
+	
+	function purge(sector){
+		return this.sector!=sector;
+	}
+	
+	function draw_self(centerx,centery){
+		Graphics2D.Draw.rectangle((centerx+(Math.cos((this.sector*(Math.PI/4))+(Math.PI/8)))*this.distance)-5,centery+(Math.sin((this.sector*(Math.PI/4))+(Math.PI/8))*this.distance)-5,10,10,255,0,0);
+	}
+	
+	
+
+
+
+}

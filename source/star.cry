@@ -1,0 +1,44 @@
+import Random;
+import Graphics2D;
+import Dispatcher;
+
+class star{
+	field x;
+	field y;
+	field speed=1.0;
+	field rate;
+	field fieldsize;
+	field lowerbound;
+	field upperbound;
+
+	constructor(size,lowerbound,upperbound){
+		//Dispatcher.setRecurringCallback(this.flow,0.1);
+		this.fieldsize=size;
+		this.x=Random.randomInt(0,this.fieldsize);
+		this.lowerbound=lowerbound;
+		this.upperbound=upperbound;
+		this.y=Random.randomInt(lowerbound,upperbound);
+		this.rate=Random.randomInt(1,5);
+		
+		
+	}
+	
+	function flow(){
+		this.x-=this.rate*this.speed;
+		if(this.speed>1.0){
+		this.speed-=0.05;
+		}
+		if(this.x<1){
+			this.x=this.fieldsize;
+			this.y=Random.randomInt(this.lowerbound,this.upperbound);
+			this.rate=Random.randomInt(1,10);
+		}
+		Graphics2D.Draw.ellipse(this.x-2,this.y-2,4,4,255,255,255);
+	}
+	
+	function setspeed(speed){
+		this.speed=speed;
+	}
+
+
+}

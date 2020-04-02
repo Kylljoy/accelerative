@@ -1,0 +1,46 @@
+import Game;
+import Graphics2D;
+import Math;
+import ImageResources;
+
+class dstm{
+	static field image_sheet;
+	static field ship_image;
+	static field flame_frame=0;
+	static field flame_count=0;
+	static field flame_images=[];
+
+	static function load(){
+		dstm.image_sheet=ImageSheet.loadFromResources("everything");
+		while(!dstm.image_sheet.isDone()){
+			continue;
+		}
+		dstm.ship_image=GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/dstm.png"));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fti-1.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fti-2.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fti-3.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fti-4.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/f1.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/f2.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/f3.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/f4.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fto-1.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fto-2.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fto-3.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fto-4.png")));
+	}
+
+	static function draw(){
+		if(dstm.flame_count>0){
+			dstm.flame_count--;
+			dstm.flame_images[dstm.flame_count/10].drawStretched(155,45,400,200);
+		}
+		dstm.ship_image.drawStretched(800/6,0,(1600)/3,255);
+	
+	}
+	
+	static function boost(){
+		dstm.flame_count=60;
+	}
+
+}

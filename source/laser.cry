@@ -1,0 +1,21 @@
+import Graphics2D;
+import Dispatcher;
+
+class laser{
+	static field x=800;
+	static field start=510;
+	static field end=800;
+	static field y=220;
+	
+	static function fire(){
+		laser.x=laser.start;
+	}
+	
+	static function animate(){
+		if(laser.x<laser.end){
+			laser.x+=15;
+			Graphics2D.Draw.rectangle(laser.x,laser.y,30,10,235,0,0);
+		}
+	}
+
+}

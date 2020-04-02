@@ -1,0 +1,42 @@
+import Math;
+import Graphics2D;
+import Dispatcher;
+
+
+class asteroid{
+	field channel=1;
+	field distance=120;
+	
+	
+	constructor(channel){
+		this.channel=channel;
+		Dispatcher.setRecurringCallback(this.closer,0.1);
+	}
+	
+	function closer(){
+		this.distance--;
+	}
+	
+	
+	function unblocked(channel){
+		return !((this.channel==(channel))&&(this.distance<10));
+	}
+	
+	function hit(){
+		return this.distance<1;
+	}
+	
+	function draw_self(xa,xb,xc,y){
+		if(this.channel==0){
+			Graphics2D.Draw.rectangle(xa-4,(y+(120-this.distance)-4),8,8,255,255,255);
+		}
+		if(this.channel==1){
+			Graphics2D.Draw.rectangle(xb-4,(y+(120-this.distance)-4),8,8,255,255,255);
+		}
+		if(this.channel==2){
+			Graphics2D.Draw.rectangle(xc-4,(y+(120-this.distance)-4),8,8,255,255,255);
+		}
+	}
+
+
+}
