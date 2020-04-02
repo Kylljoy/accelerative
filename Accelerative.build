@@ -1,45 +1,58 @@
 ﻿{
-    "id": "Accelerative",
-    "source": "source/",
-    "output": "output/%TARGET_NAME%",
-    "title": "Accelerative",
-    "icons": [
-        "assets/icon32.png",
-        "assets/icon256.png"
-    ],
-    "version": "1.0",
-    "ios-bundle-prefix": "com.yourname.Accelerative,%VERSION%",
-    "guid-seed": "com.yourname.Accelerative,v1,%TARGET_NAME%",
+	"id": "accelerative",
+	"title": "Accelerative",
+	"description": "A simple space-faring puzzle game",
+	"icons": [
+		"assets/icon32.png",
+		"assets/icon256.png"
+	],
+	
+	"deps": [
+		"%TWOCANS_SDK%/TwoCansAlpha4"
+	],
 
-    "image-sheets": [
-        { "id": "everything", "prefix": "imageassets" }
-    ],
-
-    "targets": [
-        {
-            "name": "android",
-            "platform": "javascript-app-android"
-        },
-        {
-            "name": "ios",
-            "platform": "javascript-app-ios"
-        },
-        {
-            "name": "javascript",
-            "platform": "javascript-app",
-            "js-file-prefix": "/website/relative/path/from/domain/root"
-        },
-        {
-            "name": "csharp",
-            "platform": "csharp-app"
-        },
-        {
-            "name": "java",
-            "platform": "java-app"
-        },
-        {
-            "name": "python",
-            "platform": "python-app"
-        }
-    ]
+	"source": "source",
+	"compilerlocale": "en",
+	"output": "output/%TARGET_NAME%",
+	"delegate-main-to": "TwoCansAlpha4",
+	
+	"image-sheets": [
+		{ "id": "twocans_everything", "prefix": "*" }
+	],
+	
+	"guidseed": "com.twocansandstring.demos.SimpleProject,v1,%TARGET_NAME%",
+	
+	"vars": [
+		{ "name": "screen_width", "value": 800 },
+		{ "name": "screen_height", "value": 600 },
+		{ "name": "use_beta_endpoint", "value": false },
+		{ "name": "game_title", "value": "Accelerative" },
+		{ "name": "initial_scene", "value": "GameScene" },
+		{ "name": "use_60_fps", "value": true },
+		{ "name": "enable_wasd", "value": true },
+		{ "name": "thumbnail", "value": "assets/thumbnail.png" }
+	],
+	
+	"targets": [
+		{
+			"name": "csharp",
+			"platform": "csharp-app"
+		},
+		{
+			"name": "java",
+			"platform": "java-app"
+		},
+		{
+			"name": "python",
+			"platform": "python-app"
+		},
+		{
+			"name": "ios",
+			"platform": "javascript-app-ios"
+		},
+		{
+			"name": "android",
+			"platform": "javascript-app-android"
+		}
+	]
 }

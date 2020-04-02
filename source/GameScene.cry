@@ -6,6 +6,61 @@ import Math;
 import Graphics2DText;
 import Dispatcher;
 import ImageResources;
+import TwoCansAlpha4;
+
+class GameScene : AbstractScene{ 
+	field windowHeight=600;
+	field windowWidth=800;
+	
+	field boardwidth=300;
+	field boardsize=6;
+	field blocksize=this.boardwidth/this.boardsize;
+	field margin=(this.boardwidth-(this.blocksize*this.boardsize))/2;
+	field startnodesize=(this.blocksize/4)*3;
+	field startnodepadding=(this.blocksize-this.startnodesize)/2;
+	field endnodesize=(this.blocksize/5)*4;
+	field endnodepadding=(this.blocksize-this.endnodesize)/2;
+	field endnodecutoutsize=(this.blocksize/3);
+	field endnodecutoutpadding=(this.blocksize-this.endnodecutoutsize)/2;
+	field wiresize=(this.blocksize/3);
+	field wirepadding=(this.blocksize-this.wiresize)/2;
+	field boardxoffset=(this.windowWidth-this.boardwidth)/2;
+	field boardyoffset=(this.windowHeight-this.boardwidth-10);
+	
+	field activewire=-1;
+	field wires=[];
+	
+	field incoming_ships=[];
+	field active_sector=1;
+	
+	field shield_set=1;
+	field asteroids=[];
+
+	field starfield=[];
+	
+	field color_index={"red":[255,0,0],"blue":[0,0,255],"green":[0,255,0],"yellow":[255,255,0],"orange":[255,100,0],"white":[255,255,255],"indigo":[0,255,255],"purple":[150,0,255],"pink":[255,100,100],"brown":[150,90,20],"magenta":[255,0,255],"olive":[0,150,0],"sky":[100,100,255],"beige":[255,200,200]};
+	field colors=["red","orange","yellow","green","indigo","blue","purple","white","pink","brown","magenta","olive","sky","beige"];
+	field pallet=this.colors.map(this.color_index.get);
+	
+	field last_coords=[-1,-1];
+	
+	field radarxoffset=25;
+	field radaryoffset=300;
+	field radarwidth=175;
+	field radarheight=175;
+	field radarradius=80;
+
+	field firebuttonxoffset=92;
+	field firebuttonyoffset=482;
+	field firebuttonradius=40;
+	
+	constructor(){
+	  nodes=this.new_board(this.boardsize);
+		for(i=0;i<this.boardsize;i++){
+			this.wires.add(new wire(nodes[i][0],nodes[i][1]));
+		}
+	}
+	
 
 function sum(list){
 	total=0;
@@ -106,14 +161,162 @@ function board_coord(x,y,x_offset,y_offset,blocksize,boardsize){
 	return [-1,-1];
 }
 
+function update(inputManager,events){
+for (event : events) {
+	  if(event.type==TwoCansAlpha4.EventType.MOUSE_PRESS){
+			click_coord=this.board_coord(event.x,event.y,this.boardxoffset+this.margin,this.boardyoffset+this.margin,this.blocksize,this.boardsize);
+			if(click_coord[0]!=-1){
+			//If on a start node, set the active wire and create a new attempt
+			for(i=0;i<this.boardsize;i++){
+				if(this.wires[i].isStartNodeByCoord(click_coord)){
+					this.activewire=i;
+					this.wires[i].newAttempt();
+					break;
+				}
+			}
+			}else{
+				//Fire the shooty shoot
+				if(event.x>this.firebuttonxoffset&&event.y>this.firebuttonyoffset&&event.x<(this.firebuttonxoffset+this.firebuttonradius)&&event.y<(this.firebuttonyoffset+this.firebuttonradius)){
+					laser.fire();
+					this.incoming_ships=this.incoming_ships.filter((q)=>{q.purge(this.active_sector);});
+				}else if(event.y>this.radaryoffset+this.radarheight+10&&event.y<this.radaryoffset+this.radarheight+40&&event.x>this.windowWidth-this.radarxoffset-this.radarwidth+10&&event.x<this.windowWidth-this.radarxoffset-this.radarwidth+(2*(this.radarwidth/3))+((this.radarwidth-30)/3)){
+					this.shield_set=(event.x-(this.windowWidth-this.radarxoffset-this.radarwidth+1))/((this.radarwidth/3)+10);
+				}
+				
+			}
 
+	  }
+	  if(event.type==TwoCansAlpha4.EventType.MOUSE_RELEASE){
+			this.activewire=-1;
+	  }
+	  if(event.type== TwoCansAlpha4.EventType.MOUSE_MOVE){
+		click_coord=this.board_coord(event.x,event.y,this.boardxoffset+this.margin,this.boardyoffset+this.margin,this.blocksize,this.boardsize);
+		if(this.activewire>=0&&(click_coord[0]!=this.last_coords[0]||click_coord[1]!=this.last_coords[1])){
+			this.last_coords=click_coord.clone();
+			if(!this.wires.map((wire)=>{return wire!=this.wires[this.activewire]&&(wire.pointExistsByCoord(click_coord)||wire.isNodeByCoord(click_coord));}).contains(true)){
+					this.wires[this.activewire].newPointByCoord(click_coord);
+					if(this.wires[this.activewire].isEndNodeByCoord(click_coord)){
+						this.activewire=-1;
+					}
+			}else{
+			this.activewire=-1;
+		}
+		}
+		}
+	  }
+	if(!this.wires.map((wire)=>{return wire.isComplete();}).contains(false)&&this.sum(this.wires.map((wire)=>{return wire.getLength();}))==(this.boardsize**2)){
+		this.activewire=-1;
+		this.pallet.shuffle();
+		this.wires=[];
+		//starfield.map((q)=>{q.setspeed(10.0);});
+		this.blocksize=this.boardwidth/this.boardsize;
+		this.margin=(this.boardwidth-(this.blocksize*this.boardsize))/2;
+		this.startnodesize=(this.blocksize/4)*3;
+		this.startnodepadding=(this.blocksize-this.startnodesize)/2;	
+		this.endnodesize=(this.blocksize/5)*4;
+		this.endnodepadding=(this.blocksize-this.endnodesize)/2;
+		this.endnodecutoutsize=(this.blocksize/3);
+		this.endnodecutoutpadding=(this.blocksize-this.endnodecutoutsize)/2;
+		this.wiresize=(this.blocksize/3);
+		this.wirepadding=(this.blocksize-this.wiresize)/2;
+		this.boardxoffset=(this.windowWidth-this.boardwidth)/2;
+		this.boardyoffset=(this.windowHeight-this.boardwidth-10);
+		nodes=this.new_board(this.boardsize);
+		for(i=0;i<this.boardsize;i++){
+			this.wires.add(new wire(nodes[i][0],nodes[i][1]));
+		}
+	}
 
-function main() {
-  title = "Accelerative";
-  fps = 30;
-  windowWidth = 800;
+}
+
+function render(){
+Graphics2D.Draw.fill(0, 0, 0); // fill the screen with black
+	Graphics2D.Draw.rectangle(0,255,this.windowWidth,this.windowHeight-255,100,100,100);
+	
+	// WIREMASTER BOARD
+	
+	//Do the board
+	Graphics2D.Draw.rectangle((this.windowWidth-350)/2,260,350,this.windowHeight-260,150,150,150);
+	Graphics2D.Draw.triangle((this.windowWidth-350)/2,260,(this.windowWidth-350)/2,280,((this.windowWidth-350)/2)+20,260,100,100,100);
+	Graphics2D.Draw.triangle(((this.windowWidth-350)/2)+350,260,((this.windowWidth-350)/2)+330,260,((this.windowWidth-350)/2)+350,280,100,100,100);
+	//wirelabelaccent.draw(this.boardxoffset+18,258);
+	//wirelabel.draw(this.boardxoffset+20,260);
+	Graphics2D.Draw.rectangle(this.boardxoffset,this.boardyoffset,this.boardwidth,this.boardwidth,100,100,100);
+	for(x=0;x<this.boardsize;x++){
+		for(y=0;y<this.boardsize;y++){
+			Graphics2D.Draw.rectangle((x*this.blocksize)+this.margin+this.boardxoffset+1,(y*this.blocksize)+this.margin+this.boardyoffset+1,this.blocksize-2,this.blocksize-2,50,50,50);
+	}
+	}
+	
+	//Do the nodes
+	for(i=0;i<this.boardsize;i++){
+			Graphics2D.Draw.rectangle((this.wires[i].getStartNode()[0]*this.blocksize)+this.margin+this.boardxoffset+1,(this.wires[i].getStartNode()[1]*this.blocksize)+this.margin+this.boardyoffset+1,this.blocksize-2,this.blocksize-2,50,50,50);
+			Graphics2D.Draw.rectangle((this.wires[i].getStartNode()[0]*this.blocksize)+this.margin+this.startnodepadding+this.boardxoffset+1,(this.wires[i].getStartNode()[1]*this.blocksize)+this.margin+this.startnodepadding+this.boardyoffset+1,this.startnodesize,this.startnodesize,this.pallet[i][0],this.pallet[i][1],this.pallet[i][2]);
+			Graphics2D.Draw.rectangle((this.wires[i].getEndNode()[0]*this.blocksize)+this.margin+this.boardxoffset+1,(this.wires[i].getEndNode()[1]*this.blocksize)+this.margin+this.boardyoffset+1,this.blocksize-2,this.blocksize-2,50,50,50);
+			Graphics2D.Draw.rectangle((this.wires[i].getEndNode()[0]*this.blocksize)+this.margin+this.endnodepadding+this.boardxoffset+1,(this.wires[i].getEndNode()[1]*this.blocksize)+this.margin+this.endnodepadding+this.boardyoffset+1,this.endnodesize,this.endnodesize,this.pallet[i][0],this.pallet[i][1],this.pallet[i][2]);
+			Graphics2D.Draw.rectangle((this.wires[i].getEndNode()[0]*this.blocksize)+this.margin+this.endnodecutoutpadding+this.boardxoffset+1,(this.wires[i].getEndNode()[1]*this.blocksize)+this.margin+this.endnodecutoutpadding+this.boardyoffset+1,this.endnodecutoutsize,this.endnodecutoutsize,50,50,50);
+	}
+	
+	//Do the this.wires
+	for(i=0;i<this.boardsize;i++){
+			for(segment:this.wires[i].getPoints()){
+				Graphics2D.Draw.rectangle((segment[0]*this.blocksize)+this.margin+this.boardxoffset+this.wirepadding+1,(segment[1]*this.blocksize)+this.margin+this.boardyoffset+this.wirepadding+1,this.wiresize,this.wiresize,this.pallet[i][0],this.pallet[i][1],this.pallet[i][2]);
+				if(this.wires[i].isComplete()){
+				Graphics2D.Draw.rectangle((segment[0]*this.blocksize)+this.margin+this.boardxoffset+1+((1+this.wires[i].junctionByCoord(segment)[0][0])*this.wirepadding),(segment[1]*this.blocksize)+this.margin+this.boardyoffset+1+((1+this.wires[i].junctionByCoord(segment)[0][1])*this.wirepadding),this.wiresize,this.wiresize,this.pallet[i][0],this.pallet[i][1],this.pallet[i][2]);
+				Graphics2D.Draw.rectangle((segment[0]*this.blocksize)+this.margin+this.boardxoffset+1+((1+this.wires[i].junctionByCoord(segment)[1][0])*this.wirepadding),(segment[1]*this.blocksize)+this.margin+this.boardyoffset+1+((1+this.wires[i].junctionByCoord(segment)[1][1])*this.wirepadding),this.wiresize,this.wiresize,this.pallet[i][0],this.pallet[i][1],this.pallet[i][2]);
+				}
+	}
+	}
+	
+	
+	//Radar Label
+	//gunlabelaccent.draw(this.radarxoffset-15,this.radaryoffset-40);
+	//gunlabel.draw(this.radarxoffset-13,this.radaryoffset-38);
+	
+	//Radar Box
+	Graphics2D.Draw.rectangle(this.radarxoffset,this.radaryoffset,this.radarwidth,this.radarheight,150,150,150);
+	Graphics2D.Draw.triangle(this.radarxoffset,this.radaryoffset,this.radarxoffset+20,this.radaryoffset,this.radarxoffset,this.radaryoffset+20,100,100,100);
+	Graphics2D.Draw.triangle(this.radarxoffset+this.radarwidth,this.radaryoffset,this.radarxoffset+this.radarwidth-20,this.radaryoffset,this.radarxoffset+this.radarwidth,this.radaryoffset+20,100,100,100);
+	Graphics2D.Draw.triangle(this.radarxoffset,this.radaryoffset+this.radarheight,this.radarxoffset+20,this.radaryoffset+this.radarheight,this.radarxoffset,this.radaryoffset+this.radarheight-20,100,100,100);
+	Graphics2D.Draw.triangle(this.radarxoffset+this.radarwidth,this.radaryoffset+this.radarheight,this.radarxoffset+this.radarwidth-20,this.radaryoffset+this.radarheight,this.radarxoffset+this.radarwidth,this.radaryoffset+this.radarheight-20,100,100,100);
+	
+	//Radar
+	for(i=0;i<(2*Math.PI);i+=(Math.PI/4)){
+		Graphics2D.Draw.triangle(this.radarxoffset+(this.radarwidth/2),this.radaryoffset+(this.radarheight/2),this.radarxoffset+(this.radarwidth/2)+(Math.cos(i)*(this.radarradius+5)),this.radaryoffset+(this.radarheight/2)+(Math.sin(i)*(this.radarradius+5)),this.radarxoffset+(this.radarwidth/2)+(Math.cos(i+(Math.PI/4))*(this.radarradius+5)),this.radaryoffset+(this.radarheight/2)+(Math.sin(i+(Math.PI/4))*(this.radarradius+5)),0,100,0);
+		Graphics2D.Draw.triangle(this.radarxoffset+(this.radarwidth/2),this.radaryoffset+(this.radarheight/2),this.radarxoffset+(this.radarwidth/2)+(Math.cos(i)*this.radarradius),this.radaryoffset+(this.radarheight/2)+(Math.sin(i)*this.radarradius),this.radarxoffset+(this.radarwidth/2)+(Math.cos(i+(Math.PI/4))*this.radarradius),this.radaryoffset+(this.radarheight/2)+(Math.sin(i+(Math.PI/4))*this.radarradius),0,255,0);
+		Graphics2D.Draw.line(this.radarxoffset+(this.radarwidth/2)+(Math.cos(i)*this.radarradius),this.radaryoffset+(this.radarheight/2)+(Math.sin(i)*this.radarradius),this.radarxoffset+(this.radarwidth/2)-(Math.cos(i)*this.radarradius),this.radaryoffset+(this.radarheight/2)-(Math.sin(i)*this.radarradius),2,0,100,0,255);
+	}
+	Graphics2D.Draw.line(this.radarxoffset+(this.radarwidth/2),this.radaryoffset+(this.radarheight/2),this.radarxoffset+(this.radarwidth/2)+(20*Math.cos((this.active_sector*(Math.PI/4))+(Math.PI/8))),this.radaryoffset+(this.radarheight/2)+(20*Math.sin((this.active_sector*(Math.PI/4))+(Math.PI/8))),5,100,100,255,255);
+	Graphics2D.Draw.ellipse(this.firebuttonxoffset,this.firebuttonyoffset,this.firebuttonradius,this.firebuttonradius,255,0,0);
+	
+	//incoming_ships.map((q)=>{q.draw_self(this.radarxoffset+(this.radarwidth/2),this.radaryoffset+(this.radarheight/2));});
+	
+	//Shields
+	Graphics2D.Draw.rectangle(this.windowWidth-this.radarxoffset-this.radarwidth,this.radaryoffset,this.radarwidth,this.radarheight,150,150,150);
+	Graphics2D.Draw.triangle(this.windowWidth-this.radarxoffset,this.radaryoffset,this.windowWidth-(this.radarxoffset+20),this.radaryoffset,this.windowWidth-this.radarxoffset,this.radaryoffset+20,100,100,100);
+	Graphics2D.Draw.triangle(this.windowWidth-(this.radarxoffset+this.radarwidth),this.radaryoffset,this.windowWidth-(this.radarxoffset+this.radarwidth-20),this.radaryoffset,this.windowWidth-(this.radarxoffset+this.radarwidth),this.radaryoffset+20,100,100,100);
+	Graphics2D.Draw.triangle(this.windowWidth-this.radarxoffset,this.radaryoffset+this.radarheight,this.windowWidth-(this.radarxoffset+20),this.radaryoffset+this.radarheight,this.windowWidth-this.radarxoffset,this.radaryoffset+this.radarheight-20,100,100,100);
+	Graphics2D.Draw.triangle(this.windowWidth-(this.radarxoffset+this.radarwidth),this.radaryoffset+this.radarheight,this.windowWidth-(this.radarxoffset+this.radarwidth-20),this.radaryoffset+this.radarheight,this.windowWidth-(this.radarxoffset+this.radarwidth),this.radaryoffset+this.radarheight-20,100,100,100);
+	
+	Graphics2D.Draw.rectangle(this.windowWidth-this.radarxoffset-this.radarwidth+10,this.radaryoffset+20,((this.radarwidth-30)/3)-10,this.radarheight-40,0,150,0);
+	Graphics2D.Draw.rectangle(this.windowWidth-this.radarxoffset-this.radarwidth+(this.radarwidth/3)+10,this.radaryoffset+20,((this.radarwidth-30)/3)-10,this.radarheight-40,0,150,0);
+	Graphics2D.Draw.rectangle(this.windowWidth-this.radarxoffset-this.radarwidth+(this.radarwidth/3)+(this.radarwidth/3)+10,this.radaryoffset+20,((this.radarwidth-30)/3)-10,this.radarheight-40,0,150,0);
+	
+	//shieldlabelaccent.draw(603,258);
+	//shieldlabel.draw(605,260);
+	
+	Graphics2D.Draw.rectangle(this.windowWidth-this.radarxoffset-this.radarwidth+10,this.radaryoffset+this.radarheight+10,((this.radarwidth-30)/3)-10,30,255,255,255);
+	Graphics2D.Draw.rectangle(this.windowWidth-this.radarxoffset-this.radarwidth+(this.radarwidth/3)+10,this.radaryoffset+this.radarheight+10,((this.radarwidth-30)/3)-10,30,255,255,255);
+	Graphics2D.Draw.rectangle(this.windowWidth-this.radarxoffset-this.radarwidth+(this.radarwidth/3)+(this.radarwidth/3)+10,this.radaryoffset+this.radarheight+10,((this.radarwidth-30)/3)-10,30,255,255,255);
+	
+	Graphics2D.Draw.rectangle(this.windowWidth-this.radarxoffset-this.radarwidth+10+((this.radarwidth/3)*this.shield_set),this.radaryoffset+this.radarheight-30,((this.radarwidth-30)/3)-10,10,255,255,255);
+
+}
+
+/*
+function throwaway() {
+  this.windowWidth = 800;
   windowHeight = 600;
-  window = new Game.GameWindow(title, fps, windowWidth, windowHeight);
   renderer=FontResource.fromSystem("Arial").getRenderer();
   dstm.load();
 
@@ -231,11 +434,6 @@ function main() {
 			activewire=-1;
 		}
 		}
-			/*
-				if(not node of different color or another wire){
-					add it
-				}
-			*/
 		}
 	  }
    
@@ -364,4 +562,7 @@ function main() {
 	}
     window.clockTick();
   }
+}
+}
+*/
 }
