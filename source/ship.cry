@@ -9,7 +9,6 @@ class ship{
 	
 	constructor(sector){
 		this.sector=sector;
-		Dispatcher.setRecurringCallback(this.closer,0.5);
 	}
 	
 	function hit(){

@@ -10,7 +10,6 @@ class asteroid{
 	
 	constructor(channel){
 		this.channel=channel;
-		Dispatcher.setRecurringCallback(this.closer,0.1);
 	}
 	
 	function closer(){

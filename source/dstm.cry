@@ -11,23 +11,23 @@ class dstm{
 	static field flame_images=[];
 
 	static function load(){
-		dstm.image_sheet=ImageSheet.loadFromResources("everything");
+		dstm.image_sheet=ImageSheet.loadFromResources("twocans_everything");
 		while(!dstm.image_sheet.isDone()){
 			continue;
 		}
-		dstm.ship_image=GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/dstm.png"));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fti-1.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fti-2.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fti-3.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fti-4.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/f1.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/f2.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/f3.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/f4.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fto-1.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fto-2.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fto-3.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("imageassets/fto-4.png")));
+		dstm.ship_image=GraphicsTexture.load(dstm.image_sheet.getImage("dstm.png"));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fti-1.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fti-2.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fti-3.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fti-4.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("f1.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("f2.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("f3.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("f4.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fto-1.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fto-2.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fto-3.png")));
+		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fto-4.png")));
 	}
 
 	static function draw(){

@@ -1,0 +1,13 @@
+/**/
+import Game;
+import Graphics2D;
+import Graphics2DText;
+import TwoCansAlpha4;
+
+class DialogueScene:AbstractScene{
+
+
+
+
+
+}

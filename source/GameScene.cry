@@ -36,7 +36,8 @@ class GameScene : AbstractScene{
 	field shield_set=1;
 	field asteroids=[];
 
-	field starfield=[];
+	field starfielda=[];
+	field starfieldb=[];
 	
 	field color_index={"red":[255,0,0],"blue":[0,0,255],"green":[0,255,0],"yellow":[255,255,0],"orange":[255,100,0],"white":[255,255,255],"indigo":[0,255,255],"purple":[150,0,255],"pink":[255,100,100],"brown":[150,90,20],"magenta":[255,0,255],"olive":[0,150,0],"sky":[100,100,255],"beige":[255,200,200]};
 	field colors=["red","orange","yellow","green","indigo","blue","purple","white","pink","brown","magenta","olive","sky","beige"];
@@ -58,7 +59,20 @@ class GameScene : AbstractScene{
 	  nodes=this.new_board(this.boardsize);
 		for(i=0;i<this.boardsize;i++){
 			this.wires.add(new wire(nodes[i][0],nodes[i][1]));
+			dstm.load();
 		}
+		for(i=0;i<35;i++){
+			this.starfielda.add(new star(this.windowWidth,0,255));
+		}
+		for(i=0;i<5;i++){
+			this.starfieldb.add(new star(this.windowWidth,0,255));
+		}
+		Dispatcher.setRecurringCallback(()=>{this.incoming_ships.map((q)=>{q.closer();});},0.1);
+		Dispatcher.setRecurringCallback(()=>{this.asteroids.map((q)=>{q.closer();});},0.1);
+		Dispatcher.setRecurringCallback(()=>{this.active_sector++;this.active_sector=this.active_sector%8;},0.5);
+		Dispatcher.setRecurringCallback(()=>{if(Random.randomInt(0,7)==0){this.incoming_ships.add(new ship(Random.randomInt(0,8)));}},3.0);
+		Dispatcher.setRecurringCallback(()=>{if(Random.randomInt(0,3)==0){this.asteroids.add(new asteroid(Random.randomInt(0,3)));}},5.0);
+		Dispatcher.setRecurringCallback(laser.animate,0.1);
 	}
 	
 
@@ -208,7 +222,9 @@ for (event : events) {
 		this.activewire=-1;
 		this.pallet.shuffle();
 		this.wires=[];
-		//starfield.map((q)=>{q.setspeed(10.0);});
+		this.starfielda.map((q)=>{q.setspeed(10.0);});
+		this.starfieldb.map((q)=>{q.setspeed(10.0);});
+		dstm.boost();
 		this.blocksize=this.boardwidth/this.boardsize;
 		this.margin=(this.boardwidth-(this.blocksize*this.boardsize))/2;
 		this.startnodesize=(this.blocksize/4)*3;
@@ -310,6 +326,13 @@ Graphics2D.Draw.fill(0, 0, 0); // fill the screen with black
 	Graphics2D.Draw.rectangle(this.windowWidth-this.radarxoffset-this.radarwidth+(this.radarwidth/3)+(this.radarwidth/3)+10,this.radaryoffset+this.radarheight+10,((this.radarwidth-30)/3)-10,30,255,255,255);
 	
 	Graphics2D.Draw.rectangle(this.windowWidth-this.radarxoffset-this.radarwidth+10+((this.radarwidth/3)*this.shield_set),this.radaryoffset+this.radarheight-30,((this.radarwidth-30)/3)-10,10,255,255,255);
+
+	this.starfielda.map((q)=>{q.flow();});
+	dstm.draw();
+	this.starfieldb.map((q)=>{q.flow();});
+	
+	this.incoming_ships.map((q)=>{q.draw_self(this.radarxoffset+(this.radarwidth/2),this.radaryoffset+(this.radarheight/2));});
+	this.asteroids.map((q)=>{q.draw_self((this.windowWidth-this.radarxoffset-this.radarwidth+10)+((((this.radarwidth-30)/3)-10)/2),(this.windowWidth-this.radarxoffset-this.radarwidth+(this.radarwidth/3)+10)+((((this.radarwidth-30)/3)-10)/2),(this.windowWidth-this.radarxoffset-this.radarwidth+(this.radarwidth/3)+(this.radarwidth/3)+10)+((((this.radarwidth-30)/3)-10)/2),this.radaryoffset+30);});
 
 }
 
@@ -498,7 +521,8 @@ function throwaway() {
 	Graphics2D.Draw.ellipse(firebuttonxoffset,firebuttonyoffset,firebuttonradius,firebuttonradius,255,0,0);
 	
 	incoming_ships.map((q)=>{q.draw_self(radarxoffset+(radarwidth/2),radaryoffset+(radarheight/2));});
-	
+	asteroids.map((q)=>{q.draw_self((windowWidth-radarxoffset-radarwidth+10)+((((radarwidth-30)/3)-10)/2),(windowWidth-radarxoffset-radarwidth+(radarwidth/3)+10)+((((radarwidth-30)/3)-10)/2),(windowWidth-radarxoffset-radarwidth+(radarwidth/3)+(radarwidth/3)+10)+((((radarwidth-30)/3)-10)/2),radaryoffset+30);});
+	asteroids=asteroids.filter((q)=>{q.unblocked(shield_set);});
 	//Shields
 	Graphics2D.Draw.rectangle(windowWidth-radarxoffset-radarwidth,radaryoffset,radarwidth,radarheight,150,150,150);
 	Graphics2D.Draw.triangle(windowWidth-radarxoffset,radaryoffset,windowWidth-(radarxoffset+20),radaryoffset,windowWidth-radarxoffset,radaryoffset+20,100,100,100);
