@@ -1,4 +1,5 @@
 ﻿/**/
+
 import Game;
 import Graphics2D;
 import Random;
@@ -10,10 +11,10 @@ import TwoCansAlpha4;
 
 class GameScene : AbstractScene{ 
 	field windowHeight=600;
-	field windowWidth=800;
 	
+	field windowWidth=800;
 	field boardwidth=300;
-	field boardsize=6;
+	field boardsize=4;
 	field blocksize=this.boardwidth/this.boardsize;
 	field margin=(this.boardwidth-(this.blocksize*this.boardsize))/2;
 	field startnodesize=(this.blocksize/4)*3;
@@ -55,6 +56,30 @@ class GameScene : AbstractScene{
 	field firebuttonyoffset=482;
 	field firebuttonradius=40;
 	
+	field are_ships=false;
+	field shipDensity=0;
+	field shipLikelihood=0;
+	field shipCounter=0;
+	
+	field are_asteroids=false;
+	field asteroidDensity=0;
+	field asteroidLikelihood=0;
+	field asteroidCounter=0;
+	
+	field activeGameplay=false;
+	
+	field screwups=5;
+	field maxscrewups=5;
+	
+	field minboardsize=4;
+	field maxboardsize=4;
+	
+	function setLevel(level){
+	
+	
+	}
+	
+	
 	constructor(){
 	  nodes=this.new_board(this.boardsize);
 		for(i=0;i<this.boardsize;i++){
@@ -67,11 +92,31 @@ class GameScene : AbstractScene{
 		for(i=0;i<5;i++){
 			this.starfieldb.add(new star(this.windowWidth,0,255));
 		}
-		Dispatcher.setRecurringCallback(()=>{this.incoming_ships.map((q)=>{q.closer();});},0.1);
-		Dispatcher.setRecurringCallback(()=>{this.asteroids.map((q)=>{q.closer();});},0.1);
+		Dispatcher.setRecurringCallback(()=>{if(this.activeGameplay){this.incoming_ships.map((q)=>{q.closer();});}},0.1);
+		Dispatcher.setRecurringCallback(()=>{if(this.activeGameplay){this.asteroids.map((q)=>{q.closer();});}},0.1);
 		Dispatcher.setRecurringCallback(()=>{this.active_sector++;this.active_sector=this.active_sector%8;},0.5);
-		Dispatcher.setRecurringCallback(()=>{if(Random.randomInt(0,7)==0){this.incoming_ships.add(new ship(Random.randomInt(0,8)));}},3.0);
-		Dispatcher.setRecurringCallback(()=>{if(Random.randomInt(0,3)==0){this.asteroids.add(new asteroid(Random.randomInt(0,3)));}},5.0);
+		Dispatcher.setRecurringCallback(()=>{
+			if(this.are_ships&&this.activeGameplay){
+				this.shipCounter++;
+				if(this.shipCounter>=this.shipDensity){
+					this.shipCounter=0;
+					if(Random.randomInt(1,101)<=this.shipLikelihood){
+						this.incoming_ships.add(new ship(Random.randomInt(0,8)));
+					}
+				}
+			}
+		},1.0);
+		Dispatcher.setRecurringCallback(()=>{
+			if(this.are_asteroids&&this.activeGameplay){
+				this.asteroidCounter++;
+				if(this.asteroidCounter>=this.asteroidDensity){
+					this.asteroidCounter=0;
+					if(Random.randomInt(1,101)<=this.asteroidLikelihood){
+						this.asteroids.add(new asteroid(Random.randomInt(0,3)));
+					}
+				}
+			}
+		},1.0);
 		Dispatcher.setRecurringCallback(laser.animate,0.1);
 	}
 	
@@ -175,6 +220,54 @@ function board_coord(x,y,x_offset,y_offset,blocksize,boardsize){
 	return [-1,-1];
 }
 
+function prepLevelForGameplay(){
+	this.asteroids.clear();
+	this.incoming_ships.clear();
+	this.screwups=this.maxscrewups;
+	dstm.resetodometer();
+	Dispatcher.setTimedCallback(()=>{this.activeGameplay=true;},5.0);
+
+}
+
+
+function prepGameplay(level){
+	this.maxscrewups=levels.getLevelData(level)["fragility"];
+	dstm.settarget(levels.getLevelData(level)["dist"]);
+	this.are_ships=levels.getLevelData(level)["ships"]==0;
+	this.shipDensity=levels.getLevelData(level)["ships"];
+	this.shipLikelihood=levels.getLevelData(level)["shipchance"];
+	this.are_asteroids=levels.getLevelData(level)["asses"]==0;
+	this.asteroidDensity=levels.getLevelData(level)["asses"];
+	this.asteroidLikelihood=levels.getLevelData(level)["asschance"];
+	this.minboardsize=levels.getLevelData(level)["boardmin"];
+	this.maxboardsize=levels.getLevelData(level)["boardmax"];
+	
+	
+	this.activewire=-1;
+	this.pallet.shuffle();
+	this.wires=[];
+	this.starfielda.map((q)=>{q.setspeed(1.0);});
+	this.starfieldb.map((q)=>{q.setspeed(1.0);});
+	this.boardsize=Random.randomInt(this.minboardsize,this.maxboardsize+1);
+	this.blocksize=this.boardwidth/this.boardsize;
+	this.margin=(this.boardwidth-(this.blocksize*this.boardsize))/2;
+	this.startnodesize=(this.blocksize/4)*3;
+	this.startnodepadding=(this.blocksize-this.startnodesize)/2;	
+	this.endnodesize=(this.blocksize/5)*4;
+	this.endnodepadding=(this.blocksize-this.endnodesize)/2;
+	this.endnodecutoutsize=(this.blocksize/3);
+	this.endnodecutoutpadding=(this.blocksize-this.endnodecutoutsize)/2;
+	this.wiresize=(this.blocksize/3);
+	this.wirepadding=(this.blocksize-this.wiresize)/2;
+	this.boardxoffset=(this.windowWidth-this.boardwidth)/2;
+	this.boardyoffset=(this.windowHeight-this.boardwidth-10);
+	nodes=this.new_board(this.boardsize);
+	for(i=0;i<this.boardsize;i++){
+		this.wires.add(new wire(nodes[i][0],nodes[i][1]));
+	}
+	this.prepLevelForGameplay();
+}
+
 function update(inputManager,events){
 for (event : events) {
 	  if(event.type==TwoCansAlpha4.EventType.MOUSE_PRESS){
@@ -225,6 +318,7 @@ for (event : events) {
 		this.starfielda.map((q)=>{q.setspeed(10.0);});
 		this.starfieldb.map((q)=>{q.setspeed(10.0);});
 		dstm.boost();
+		this.boardsize=Random.randomInt(this.minboardsize,this.maxboardsize+1);
 		this.blocksize=this.boardwidth/this.boardsize;
 		this.margin=(this.boardwidth-(this.blocksize*this.boardsize))/2;
 		this.startnodesize=(this.blocksize/4)*3;
@@ -242,11 +336,34 @@ for (event : events) {
 			this.wires.add(new wire(nodes[i][0],nodes[i][1]));
 		}
 	}
+	if(this.incoming_ships.map((q)=>{return q.hit();}).contains(true)){
+		this.incoming_ships=this.incoming_ships.filter((q)=>{return !q.hit();});
+		this.screwups--;
+	}
+	
+	if(this.asteroids.map((q)=>{return q.hit();}).contains(true)){
+		this.asteroids=this.asteroids.filter((q)=>{return !q.hit();});
+		this.screwups--;
+	}
+	if(this.screwups<=0){
+		this.activeGameplay=false;
+		this.switchSceneFade(SceneManager.defeatscene);
+	}
+	
+	if(dstm.arewethereyet()){
+		this.activeGameplay=false;
+		SceneManager.victoryscene.results(this.maxscrewups-this.screwups,this.maxscrewups);
+		this.switchSceneFade(SceneManager.victoryscene);
+	}
 
 }
 
 function render(){
-Graphics2D.Draw.fill(0, 0, 0); // fill the screen with black
+	Graphics2D.Draw.fill(0, 0, 0);
+	//Intro Card
+	
+	
+	//Control Panel
 	Graphics2D.Draw.rectangle(0,255,this.windowWidth,this.windowHeight-255,100,100,100);
 	
 	// WIREMASTER BOARD

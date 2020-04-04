@@ -1,0 +1,36 @@
+/**/
+
+import TwoCansAlpha4;
+import Graphics2D;
+import Graphics2DText;
+
+
+class TitleScene:AbstractScene{
+	static field title;
+	static field text_renderer=FontResource.fromSystem("Consolas").getRenderer().setColor(255,255,255).setSize(20).setStyle(FontStyle.BOLD);
+	constructor(){
+		imagemanager.wondertwinsactivate();
+		TitleScene.title=imagemanager.load("title.png");
+	}
+	
+	function render(){
+		Graphics2D.Draw.fill(130,130,255);
+		Graphics2D.Draw.rectangle(130,10,540,200,255,255,0);
+		TitleScene.text_renderer.render("A Space-Age Puzzle Game").draw(210,220);
+		TitleScene.text_renderer.render("Press Any Key To Start").draw(210,500);
+		TitleScene.title.drawStretched(150,-20,500,200);
+	}
+	
+	function update(inputManager,events){
+		for(event:events){
+			if(event.type==TwoCansAlpha4.EventType.KEY && event.up){
+				SceneManager.prepDialogue();
+				this.switchSceneFade(SceneManager.dialoguescene);
+			}
+		
+		}
+	
+	}
+
+
+}

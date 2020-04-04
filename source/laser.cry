@@ -6,6 +6,7 @@ class laser{
 	static field start=510;
 	static field end=800;
 	static field y=220;
+
 	
 	static function fire(){
 		laser.x=laser.start;

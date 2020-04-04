@@ -1,46 +1,59 @@
+
 import Game;
 import Graphics2D;
 import Math;
 import ImageResources;
 
 class dstm{
-	static field image_sheet;
 	static field ship_image;
+	static field distance_travelled=0;
+	static field total_distance=3;
 	static field flame_frame=0;
 	static field flame_count=0;
 	static field flame_images=[];
 
 	static function load(){
-		dstm.image_sheet=ImageSheet.loadFromResources("twocans_everything");
-		while(!dstm.image_sheet.isDone()){
-			continue;
-		}
-		dstm.ship_image=GraphicsTexture.load(dstm.image_sheet.getImage("dstm.png"));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fti-1.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fti-2.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fti-3.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fti-4.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("f1.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("f2.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("f3.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("f4.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fto-1.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fto-2.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fto-3.png")));
-		dstm.flame_images.add(GraphicsTexture.load(dstm.image_sheet.getImage("fto-4.png")));
+		imagemanager.wondertwinsactivate();
+		dstm.ship_image=imagemanager.load("dstm.png");
+		dstm.flame_images.add(imagemanager.load("fti-1.png"));
+		dstm.flame_images.add(imagemanager.load("fti-2.png"));
+		dstm.flame_images.add(imagemanager.load("fti-3.png"));
+		dstm.flame_images.add(imagemanager.load("fti-4.png"));
+		dstm.flame_images.add(imagemanager.load("f1.png"));
+		dstm.flame_images.add(imagemanager.load("f2.png"));
+		dstm.flame_images.add(imagemanager.load("f3.png"));
+		dstm.flame_images.add(imagemanager.load("f4.png"));
+		dstm.flame_images.add(imagemanager.load("fto-1.png"));
+		dstm.flame_images.add(imagemanager.load("fto-2.png"));
+		dstm.flame_images.add(imagemanager.load("fto-3.png"));
+		dstm.flame_images.add(imagemanager.load("fto-4.png"));
 	}
 
 	static function draw(){
 		if(dstm.flame_count>0){
+			dstm.distance_travelled+=1;
 			dstm.flame_count--;
 			dstm.flame_images[dstm.flame_count/10].drawStretched(155,45,400,200);
 		}
+		dstm.ship_image.drawStretched((dstm.distance_travelled/(50*dstm.total_distance))*760,0,50,20);
 		dstm.ship_image.drawStretched(800/6,0,(1600)/3,255);
 	
 	}
 	
+	static function arewethereyet(){
+		return dstm.distance_travelled>=(50*dstm.total_distance);
+	}
+	
+	static function resetodometer(){
+		dstm.distance_travelled=0.0;
+	}
+	
+	static function settarget(target){
+		dstm.total_distance=target;
+	}
+	
 	static function boost(){
-		dstm.flame_count=60;
+		dstm.flame_count+=50;
 	}
 
 }

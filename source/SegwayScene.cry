@@ -1,0 +1,93 @@
+/**/
+import TwoCansAlpha4;
+import Graphics2D;
+import Graphics2DText;
+
+
+class SegwayScene:AbstractScene{
+	field location="Comegan System";
+	field cargo="Milk. Lots.";
+	field murkquote="If at first you don't succeed, blame the failure on someone else";
+	field fragility=50;
+	field distance=5;
+	field shipdensity=0;
+	field asteroiddensity=0;
+	field shiplikelihood=0;
+	field asteroidlikelihood=0;
+	static field starfielda=[];
+	static field starfieldb=[];
+	static field ship=imagemanager.load("dstm.png");
+	static field textRenderer=FontResource.fromSystem("Consolas").getRenderer().setColor(255,255,255).setSize(10).setStyle(FontStyle.BOLD);
+
+	constructor(){
+		for(i=0;i<35;i++){
+			SegwayScene.starfielda.add(new star(800,400,600));
+		}
+		for(i=0;i<5;i++){
+			SegwayScene.starfieldb.add(new star(800,400,600));
+		}
+	}
+	
+	function prepSegway(level){
+		this.location=levels.getLevelData(level)["loc"];
+		this.cargo=levels.getLevelData(level)["cargo"];
+		this.murkquote=levels.getLevelData(level)["murk"];
+		this.fragility=levels.getLevelData(level)["fragility"];
+		this.distance=levels.getLevelData(level)["dist"];
+		this.shipdensity=levels.getLevelData(level)["ships"];
+		this.shiplikelihood=levels.getLevelData(level)["shipchance"];
+		this.asteroiddensity=levels.getLevelData(level)["asses"];
+		this.asteroidlikelihood=levels.getLevelData(level)["asschance"];
+	}
+	
+	function update(inputManager,events){
+			for(event:events){
+				if(event.type==TwoCansAlpha4.EventType.KEY && event.up){
+					this.switchSceneFade(SceneManager.gamescene);
+				}
+		
+			}
+	
+	}
+	
+	function render(){
+		Graphics2D.Draw.fill(0,0,0);
+		Graphics2D.Draw.rectangle(0,0,800,400,150,150,255);
+		SegwayScene.starfielda.map((q)=>{q.flow();});
+		SegwayScene.ship.drawStretched(200,400,400,200);
+		SegwayScene.starfieldb.map((q)=>{q.flow();});
+		SegwayScene.textRenderer.render("Current Location : "+this.location).draw(0,0);
+		SegwayScene.textRenderer.render("Distance to Dropoff : "+this.distance+"  lightyears").draw(0,30);
+		SegwayScene.textRenderer.render("Current Cargo : "+this.cargo).draw(0,60);
+		SegwayScene.textRenderer.render("Fragility Rating : "+this.fragility+"  Permissable Screwups").draw(0,90);
+		if(this.shipdensity==0){
+			shipDensity=SegwayScene.textRenderer.render("Enemy Density : None");
+		}else if(this.shipdensity<5){
+			shipDensity=SegwayScene.textRenderer.render("Enemy Density : High");
+		}else if(this.shipdensity<10){
+			shipDensity=SegwayScene.textRenderer.render("Enemy Density : Medium");
+		}else{
+			shipDensity=SegwayScene.textRenderer.render("Enemy Density : Low");
+		}
+		shipDensity.draw(0,120);
+		SegwayScene.textRenderer.render("Enemy Encounter Rate : "+this.shiplikelihood+"%").draw(0,150);
+		if(this.asteroiddensity==0){
+			asteroidDensity=SegwayScene.textRenderer.render("Asteroid Density : None");
+		}else if(this.asteroiddensity<5){
+			asteroidDensity=SegwayScene.textRenderer.render("Asteroid Density : High");
+		}else if(this.asteroiddensity<10){
+			asteroidDensity=SegwayScene.textRenderer.render("Asteroid Density : Medium");
+		}else{
+			asteroidDensity=SegwayScene.textRenderer.render("Asteroid Density : Low");
+		}
+		asteroidDensity.draw(0,180);
+		SegwayScene.textRenderer.render("Asteroid Encounter Rate : "+this.asteroidlikelihood+"%").draw(0,210);
+		murkquotesplit=DialogueScene.splitter("Murk's Quote of the Day : \""+this.murkquote+"\"",50);
+			for(i=0;i<murkquotesplit.length;i++){
+				SegwayScene.textRenderer.render(murkquotesplit[i]).draw(0,240+(30*i));
+			}
+		SegwayScene.textRenderer.render("<Press Any Key To Continue>").draw(280,380);
+	}
+
+
+}

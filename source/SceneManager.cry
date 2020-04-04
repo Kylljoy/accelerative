@@ -1,0 +1,28 @@
+import TwoCansAlpha4;
+
+class SceneManager{
+	//Keep the same scenes and reuse them with different parameters to preserve memory and reduce load time between them
+	static field gamescene=new GameScene();
+	static field dialoguescene=new DialogueScene();
+	static field segwayscene=new SegwayScene();
+	static field defeatscene=new FailureScene();
+	static field victoryscene= new VictoryScene();
+
+	static field currentScene=0;
+	static field totalLevels=4;
+	
+	
+	
+	static function prepGameplay(){
+		SceneManager.segwayscene.prepSegway(SceneManager.currentScene);
+		SceneManager.gamescene.prepGameplay(SceneManager.currentScene);
+	}
+	
+	static function prepDialogue(){
+		SceneManager.currentScene++;
+		if(SceneManager.currentScene>SceneManager.totalLevels){
+			SceneManager.currentScene=SceneManager.totalLevels;
+		}
+		SceneManager.dialoguescene.prepForCutscene(SceneManager.currentScene);
+	}
+}

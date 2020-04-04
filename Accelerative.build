@@ -27,7 +27,7 @@
 		{ "name": "screen_height", "value": 600 },
 		{ "name": "use_beta_endpoint", "value": false },
 		{ "name": "game_title", "value": "Accelerative" },
-		{ "name": "initial_scene", "value": "GameScene" },
+		{ "name": "initial_scene", "value": "TitleScene" },
 		{ "name": "use_60_fps", "value": true },
 		{ "name": "enable_wasd", "value": true },
 		{ "name": "thumbnail", "value": "assets/thumbnail.png" }

@@ -1,0 +1,71 @@
+/**/
+
+import TwoCansAlpha4;
+import Graphics2D;
+import Graphics2DText;
+import Math;
+
+
+class VictoryScene:AbstractScene{
+	static field title;
+	static field text_renderer=FontResource.fromSystem("Consolas").getRenderer().setColor(255,255,255).setSize(20).setStyle(FontStyle.BOLD);
+	static field penalty_renderer=FontResource.fromSystem("Consolas").getRenderer().setColor(255,0,0).setSize(10).setStyle(FontStyle.BOLD);
+	static field bonus_renderer=FontResource.fromSystem("Consolas").getRenderer().setColor(0,255,0).setSize(10).setStyle(FontStyle.BOLD);
+	field damage=6;
+	field maxdamage=7;
+	field payment=20;
+	field bonus=10;
+	
+	constructor(){
+		imagemanager.wondertwinsactivate();
+		VictoryScene.title=imagemanager.load("success.png");
+	}
+	
+	function jobresults(payment,bonus){
+		this.payment=payment;
+		this.bonus=bonus;
+	}
+	
+	function results(damage,maxdamage){
+		this.damage=damage;
+		this.maxdamage=maxdamage;
+	}
+	
+	function render(){
+		Graphics2D.Draw.fill(130,130,255);
+		Graphics2D.Draw.rectangle(200,10,400,200,255,255,0);
+		VictoryScene.text_renderer.render("Cargo Delivered!").draw(255,220);
+		VictoryScene.penalty_renderer.render("Number of Screwups :   "+this.damage).draw(205,260);
+		VictoryScene.penalty_renderer.render("Allowable Screwups :   "+this.maxdamage).draw(205,280);
+		if(((((this.maxdamage+1)-this.damage)*100)/(this.maxdamage+1))>50){
+			VictoryScene.bonus_renderer.render("Cargo Integrity :  "+((((this.maxdamage)-this.damage)*100)/(this.maxdamage))+" %").draw(205,300);
+		}else{
+		VictoryScene.penalty_renderer.render("Cargo Integrity :  "+((((this.maxdamage)-this.damage)*100)/(this.maxdamage))+" %").draw(205,300);
+		}
+		VictoryScene.bonus_renderer.render("Expected Payment :  "+this.payment+"$").draw(205,340);
+		VictoryScene.bonus_renderer.render("Recieved Payment :  "+((((((this.maxdamage)-this.damage)*this.payment)/(this.maxdamage+1))))+"$").draw(205,360);
+		if(this.damage==0){
+		VictoryScene.bonus_renderer.render("No Damage Bonus :  "+this.bonus+"$").draw(205,380);
+		VictoryScene.text_renderer.render("Total Profit :  "+(this.bonus+this.payment)+"$").draw(260,430);
+		}else{
+			VictoryScene.penalty_renderer.render("No Damage Bonus :  0$").draw(205,380);
+			VictoryScene.text_renderer.render("Total Profit :  "+((((((this.maxdamage)-this.damage)*this.payment)/(this.maxdamage))))+"$").draw(260,430);
+		}
+		
+		VictoryScene.text_renderer.render("Press Any Key To Continue").draw(210,500);
+		VictoryScene.title.drawStretched(230,-20,500,200);
+	}
+	
+	function update(inputManager,events){
+		for(event:events){
+			if(event.type==TwoCansAlpha4.EventType.KEY && event.up){
+			SceneManager.prepDialogue();
+				this.switchSceneFade(SceneManager.dialoguescene);
+			}
+		
+		}
+	
+	}
+
+
+}

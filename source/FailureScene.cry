@@ -1,0 +1,36 @@
+/**/
+
+import TwoCansAlpha4;
+import Graphics2D;
+import Graphics2DText;
+
+
+class FailureScene:AbstractScene{
+	static field title;
+	static field text_renderer=FontResource.fromSystem("Consolas").getRenderer().setColor(255,255,255).setSize(20).setStyle(FontStyle.BOLD);
+	constructor(){
+		imagemanager.wondertwinsactivate();
+		FailureScene.title=imagemanager.load("failure.png");
+	}
+	
+	function render(){
+		Graphics2D.Draw.fill(130,130,255);
+		Graphics2D.Draw.rectangle(130,10,540,200,255,255,0);
+		FailureScene.text_renderer.render("Cargo Destroyed!").draw(245,220);
+		FailureScene.text_renderer.render("Press Any Key To Try Again").draw(210,500);
+		FailureScene.title.drawStretched(185,-20,500,200);
+	}
+	
+	function update(inputManager,events){
+		for(event:events){
+			if(event.type==TwoCansAlpha4.EventType.KEY && event.up){
+				SceneManager.prepGameplay();
+				this.switchSceneFade(SceneManager.segwayscene);
+			}
+		
+		}
+	
+	}
+
+
+}

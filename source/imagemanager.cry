@@ -1,0 +1,18 @@
+/**/
+import ImageResources;
+import Graphics2D;
+
+class imagemanager{
+	static field sheet=ImageSheet.loadFromResources("twocans_everything");
+	
+	static function load(path){
+		return GraphicsTexture.load(imagemanager.sheet.getImage(path));
+	}
+	
+	static function wondertwinsactivate(){
+		while(!imagemanager.sheet.isDone()){
+			continue;
+		}
+	}
+
+}
