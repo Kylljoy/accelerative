@@ -1,7 +1,6 @@
 
 import Graphics2D;
 import Math;
-import ImageResources;
 
 class dstm{
 	static field ship_image;
@@ -12,7 +11,7 @@ class dstm{
 	static field flame_images=[];
 
 	static function load(){
-		imagemanager.wondertwinsactivate();
+		//imagemanager.wondertwinsactivate();
 		dstm.ship_image=imagemanager.load("dstm.png");
 		dstm.flame_images.add(imagemanager.load("fti-1.png"));
 		dstm.flame_images.add(imagemanager.load("fti-2.png"));

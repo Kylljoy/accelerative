@@ -17,7 +17,7 @@ class VictoryScene:AbstractScene{
 	field bonus=10;
 	
 	constructor(){
-		imagemanager.wondertwinsactivate();
+	//	imagemanager.wondertwinsactivate();
 		VictoryScene.title=imagemanager.load("success.png");
 	}
 	

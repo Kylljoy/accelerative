@@ -21,7 +21,7 @@ class DialogueScene:AbstractScene{
 	field active_image="";
 	
 	constructor(){
-		imagemanager.wondertwinsactivate();
+		//imagemanager.wondertwinsactivate();
 		for(image:DialogueScene.images_to_load){
 			DialogueScene.image_directory[image]=imagemanager.load(image+".png");
 		}
@@ -52,7 +52,7 @@ class DialogueScene:AbstractScene{
 				if((this.d_page)>=DialogueScene.splitter(this.dialogue[this.d_set]["d"],50).length/5){
 					this.d_page=0;
 					if((this.d_set+1)>=this.dialogue.length){
-					print(this.d_set);
+					//print(this.d_set);
 					SceneManager.prepGameplay();
 					this.switchSceneFade(SceneManager.segwayscene);
 					return;

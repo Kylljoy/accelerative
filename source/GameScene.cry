@@ -5,7 +5,6 @@ import Random;
 import Math;
 import Graphics2DText;
 import Dispatcher;
-import ImageResources;
 import TwoCansAlpha4;
 
 class GameScene : AbstractScene{ 

@@ -9,7 +9,7 @@ class FailureScene:AbstractScene{
 	static field title;
 	static field text_renderer=FontResource.fromSystem("Consolas").getRenderer().setColor(255,255,255).setSize(20).setStyle(FontStyle.BOLD);
 	constructor(){
-		imagemanager.wondertwinsactivate();
+		//imagemanager.wondertwinsactivate();
 		FailureScene.title=imagemanager.load("failure.png");
 	}
 	
