@@ -8,9 +8,11 @@ import Math;
 
 class VictoryScene:AbstractScene{
 	static field title;
-	static field text_renderer=FontResource.fromSystem("Consolas").getRenderer().setColor(255,255,255).setSize(20).setStyle(FontStyle.BOLD);
-	static field penalty_renderer=FontResource.fromSystem("Consolas").getRenderer().setColor(255,0,0).setSize(10).setStyle(FontStyle.BOLD);
-	static field bonus_renderer=FontResource.fromSystem("Consolas").getRenderer().setColor(0,255,0).setSize(10).setStyle(FontStyle.BOLD);
+	static field titlebackground;
+	static field text_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(20).setStyle(FontStyle.BOLD);
+	static field penalty_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,0,0).setSize(15).setStyle(FontStyle.BOLD);
+	static field bonus_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(0,255,0).setSize(15).setStyle(FontStyle.BOLD);
+	static field starfield=[];
 	field damage=6;
 	field maxdamage=7;
 	field payment=20;
@@ -18,7 +20,11 @@ class VictoryScene:AbstractScene{
 	
 	constructor(){
 	//	imagemanager.wondertwinsactivate();
+		VictoryScene.titlebackground=imagemanager.load("title_background.png");
 		VictoryScene.title=imagemanager.load("success.png");
+		for(i=0;i<80;i++){
+			VictoryScene.starfield.add(new star(800,0,600));
+	}
 	}
 	
 	function jobresults(payment,bonus){
@@ -32,28 +38,47 @@ class VictoryScene:AbstractScene{
 	}
 	
 	function render(){
-		Graphics2D.Draw.fill(130,130,255);
-		Graphics2D.Draw.rectangle(200,10,400,200,255,255,0);
-		VictoryScene.text_renderer.render("Cargo Delivered!").draw(255,220);
-		VictoryScene.penalty_renderer.render("Number of Screwups :   "+this.damage).draw(205,260);
-		VictoryScene.penalty_renderer.render("Allowable Screwups :   "+this.maxdamage).draw(205,280);
+		Graphics2D.Draw.fill(0,0,0);
+		VictoryScene.starfield.map((q)=>{q.flow();});
+		Graphics2D.Draw.rectangle(195,195,410,330,255,255,255);
+		Graphics2D.Draw.rectangle(200,200,400,320,0,0,0);
+		
+		Graphics2D.Draw.triangle(200,200,300,200,200,300,255,255,255);
+		Graphics2D.Draw.triangle(190,190,300,190,190,300,0,0,0);
+		
+		Graphics2D.Draw.triangle(600,200,500,200,600,300,255,255,255);
+		Graphics2D.Draw.triangle(610,190,500,190,610,300,0,0,0);
+		
+		Graphics2D.Draw.triangle(200,520,300,520,200,420,255,255,255);
+		Graphics2D.Draw.triangle(195,525,295,525,195,425,0,0,0);
+		
+		Graphics2D.Draw.triangle(600,520,500,520,600,420,255,255,255);
+		Graphics2D.Draw.triangle(605,525,505,525,605,425,0,0,0);
+		
+		VictoryScene.text_renderer.render("Cargo Delivered!").draw(290,220);
+		VictoryScene.penalty_renderer.render("Number of Screwups :   "+this.damage).draw(280,250);
+		VictoryScene.penalty_renderer.render("Allowable Screwups :   "+this.maxdamage).draw(280,275);
 		if(((((this.maxdamage+1)-this.damage)*100)/(this.maxdamage+1))>50){
-			VictoryScene.bonus_renderer.render("Cargo Integrity :  "+((((this.maxdamage)-this.damage)*100)/(this.maxdamage))+" %").draw(205,300);
+			VictoryScene.bonus_renderer.render("Cargo Integrity :  "+((((this.maxdamage)-this.damage)*100)/(this.maxdamage))+" %").draw(290,300);
 		}else{
-		VictoryScene.penalty_renderer.render("Cargo Integrity :  "+((((this.maxdamage)-this.damage)*100)/(this.maxdamage))+" %").draw(205,300);
+		VictoryScene.penalty_renderer.render("Cargo Integrity :  "+((((this.maxdamage)-this.damage)*100)/(this.maxdamage))+" %").draw(290,300);
 		}
-		VictoryScene.bonus_renderer.render("Expected Payment :  "+this.payment+"$").draw(205,340);
-		VictoryScene.bonus_renderer.render("Recieved Payment :  "+((((((this.maxdamage)-this.damage)*this.payment)/(this.maxdamage+1))))+"$").draw(205,360);
+		VictoryScene.bonus_renderer.render("Expected Payment :  "+this.payment+"$").draw(280,340);
+		VictoryScene.bonus_renderer.render("Recieved Payment :  "+((((((this.maxdamage)-this.damage)*this.payment)/(this.maxdamage))))+"$").draw(280,360);
 		if(this.damage==0){
-		VictoryScene.bonus_renderer.render("No Damage Bonus :  "+this.bonus+"$").draw(205,380);
-		VictoryScene.text_renderer.render("Total Profit :  "+(this.bonus+this.payment)+"$").draw(260,430);
+		VictoryScene.bonus_renderer.render("No Damage Bonus :  "+this.bonus+"$").draw(285,380);
+		VictoryScene.text_renderer.render("Total Profit :  "+(this.bonus+this.payment)+"$").draw(285,430);
 		}else{
-			VictoryScene.penalty_renderer.render("No Damage Bonus :  0$").draw(205,380);
-			VictoryScene.text_renderer.render("Total Profit :  "+((((((this.maxdamage)-this.damage)*this.payment)/(this.maxdamage))))+"$").draw(260,430);
+			VictoryScene.penalty_renderer.render("No Damage Bonus :  0$").draw(285,380);
+			VictoryScene.text_renderer.render("Total Profit :  "+((((((this.maxdamage)-this.damage)*this.payment)/(this.maxdamage))))+"$").draw(285,430);
 		}
 		
-		VictoryScene.text_renderer.render("Press Any Key To Continue").draw(210,500);
-		VictoryScene.title.drawStretched(230,-20,500,200);
+		
+		Graphics2D.Draw.rectangle(185,530,460,60,255,255,255);
+		Graphics2D.Draw.rectangle(190,535,450,50,0,0,0);
+		VictoryScene.text_renderer.render("Press Any Key To Continue").draw(250,550);
+		VictoryScene.titlebackground.drawStretched(40,-63,700,370);
+		VictoryScene.title.drawStretched(280,0,400,100);
 	}
 	
 	function update(inputManager,events){

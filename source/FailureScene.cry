@@ -7,18 +7,42 @@ import Graphics2DText;
 
 class FailureScene:AbstractScene{
 	static field title;
-	static field text_renderer=FontResource.fromSystem("Consolas").getRenderer().setColor(255,255,255).setSize(20).setStyle(FontStyle.BOLD);
+	static field text_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(30).setStyle(FontStyle.BOLD);
+	static field titlebackground;
+	static field starfield=[];
 	constructor(){
+		for(i=0;i<80;i++){
+			FailureScene.starfield.add(new star(800,0,600));
+		}
 		//imagemanager.wondertwinsactivate();
+		FailureScene.titlebackground=imagemanager.load("title_background.png");
 		FailureScene.title=imagemanager.load("failure.png");
 	}
 	
 	function render(){
-		Graphics2D.Draw.fill(130,130,255);
-		Graphics2D.Draw.rectangle(130,10,540,200,255,255,0);
-		FailureScene.text_renderer.render("Cargo Destroyed!").draw(245,220);
-		FailureScene.text_renderer.render("Press Any Key To Try Again").draw(210,500);
-		FailureScene.title.drawStretched(185,-20,500,200);
+		Graphics2D.Draw.fill(0,0,0);
+		FailureScene.starfield.map((q)=>{q.flow();});
+		Graphics2D.Draw.rectangle(195,195,410,330,255,255,255);
+		Graphics2D.Draw.rectangle(200,200,400,320,0,0,0);
+		
+		Graphics2D.Draw.triangle(200,200,300,200,200,300,255,255,255);
+		Graphics2D.Draw.triangle(190,190,300,190,190,300,0,0,0);
+		
+		Graphics2D.Draw.triangle(600,200,500,200,600,300,255,255,255);
+		Graphics2D.Draw.triangle(610,190,500,190,610,300,0,0,0);
+		
+		Graphics2D.Draw.triangle(200,520,300,520,200,420,255,255,255);
+		Graphics2D.Draw.triangle(195,525,295,525,195,425,0,0,0);
+		
+		Graphics2D.Draw.triangle(600,520,500,520,600,420,255,255,255);
+		Graphics2D.Draw.triangle(605,525,505,525,605,425,0,0,0);
+		
+		FailureScene.text_renderer.render("Cargo Destroyed!").draw(270,240);
+		Graphics2D.Draw.rectangle(185,530,460,60,255,255,255);
+		Graphics2D.Draw.rectangle(190,535,450,50,0,0,0);
+		FailureScene.text_renderer.render("Press Any Key To Try Again").draw(210,545);
+		FailureScene.titlebackground.drawStretched(40,-63,700,370);
+		FailureScene.title.drawStretched(245,0,400,100);
 	}
 	
 	function update(inputManager,events){

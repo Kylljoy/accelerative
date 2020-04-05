@@ -5,26 +5,33 @@ import Graphics2DText;
 
 
 class SegwayScene:AbstractScene{
+	
+	static field title;
+	static field titlebackground;
+	
+	
+	field day=0;
 	field location="Comegan System";
 	field cargo="Milk. Lots.";
-	field murkquote="If at first you don't succeed, blame the failure on someone else";
+	field murkquote="If you give a man a fish, he'll eat for a day. If you teach a man to fish, he'll eat for a year. If you give him a high-interest loan on the fishing rod, you'll never have to work another day in your life.";
 	field fragility=50;
 	field distance=5;
 	field shipdensity=0;
 	field asteroiddensity=0;
 	field shiplikelihood=0;
 	field asteroidlikelihood=0;
-	static field starfielda=[];
-	static field starfieldb=[];
+	static field starfieldmain=[];
 	static field ship=imagemanager.load("dstm.png");
-	static field textRenderer=FontResource.fromSystem("Consolas").getRenderer().setColor(255,255,255).setSize(10).setStyle(FontStyle.BOLD);
+	static field textRenderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(15).setStyle(FontStyle.BOLD);
+	static field accentRenderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(200,200,0).setSize(15).setStyle(FontStyle.BOLD);
+	static field titleRenderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(15).setStyle(FontStyle.BOLD);
 
 	constructor(){
-		for(i=0;i<35;i++){
-			SegwayScene.starfielda.add(new star(800,400,600));
-		}
-		for(i=0;i<5;i++){
-			SegwayScene.starfieldb.add(new star(800,400,600));
+		SegwayScene.title=imagemanager.load("prepare.png");
+		SegwayScene.titlebackground=imagemanager.load("title_background.png");
+
+		for(i=0;i<55;i++){
+			SegwayScene.starfieldmain.add(new star(800,0,600));
 		}
 	}
 	
@@ -38,6 +45,7 @@ class SegwayScene:AbstractScene{
 		this.shiplikelihood=levels.getLevelData(level)["shipchance"];
 		this.asteroiddensity=levels.getLevelData(level)["asses"];
 		this.asteroidlikelihood=levels.getLevelData(level)["asschance"];
+		this.day=level;
 	}
 	
 	function update(inputManager,events){
@@ -52,41 +60,38 @@ class SegwayScene:AbstractScene{
 	
 	function render(){
 		Graphics2D.Draw.fill(0,0,0);
-		Graphics2D.Draw.rectangle(0,0,800,400,150,150,255);
-		SegwayScene.starfielda.map((q)=>{q.flow();});
-		SegwayScene.ship.drawStretched(200,400,400,200);
-		SegwayScene.starfieldb.map((q)=>{q.flow();});
-		SegwayScene.textRenderer.render("Current Location : "+this.location).draw(0,0);
-		SegwayScene.textRenderer.render("Distance to Dropoff : "+this.distance+"  lightyears").draw(0,30);
-		SegwayScene.textRenderer.render("Current Cargo : "+this.cargo).draw(0,60);
-		SegwayScene.textRenderer.render("Fragility Rating : "+this.fragility+"  Permissable Screwups").draw(0,90);
-		if(this.shipdensity==0){
-			shipDensity=SegwayScene.textRenderer.render("Enemy Density : None");
-		}else if(this.shipdensity<5){
-			shipDensity=SegwayScene.textRenderer.render("Enemy Density : High");
-		}else if(this.shipdensity<10){
-			shipDensity=SegwayScene.textRenderer.render("Enemy Density : Medium");
-		}else{
-			shipDensity=SegwayScene.textRenderer.render("Enemy Density : Low");
+		SegwayScene.starfieldmain.map((q)=>{q.flow();});
+		SegwayScene.titlebackground.drawStretched(185,-100,400,400);
+		SegwayScene.title.drawStretched(275,0,280,80);
+		
+		Graphics2D.Draw.rectangle(95,145,610,440,255,255,255);
+		Graphics2D.Draw.rectangle(100,150,600,430,0,0,0);
+		
+		SegwayScene.titleRenderer.render("Day : "+this.day).draw(350,150);
+		Graphics2D.Draw.line(400,190,400,410,1,150,150,150);
+		Graphics2D.Draw.line(150,430,650,430,1,150,150,150);
+		
+		SegwayScene.titleRenderer.render("Cargo Manifest").draw(185,170);
+		SegwayScene.titleRenderer.render("Today's Forcast").draw(460,175);
+		SegwayScene.titleRenderer.render("Murk's Quote of the Day").draw(280,440);
+	
+		SegwayScene.textRenderer.render("Current Location:").draw(170,200);
+		SegwayScene.accentRenderer.render(this.location).draw(240-((this.location.length/2)*10),230);
+		SegwayScene.textRenderer.render("Dropoff Distance:").draw(165,260);
+		SegwayScene.accentRenderer.render(this.distance+" lightyears").draw(190,290);
+		SegwayScene.textRenderer.render("Consignment:").draw(180,320);
+		SegwayScene.accentRenderer.render(this.cargo).draw(245-((this.cargo.length/2)*10),350);
+		SegwayScene.textRenderer.render("Fragility:").draw(200,380);
+		SegwayScene.accentRenderer.render(this.fragility+" Allowed Screwups").draw(145,405);
+	
+		murkquotesplit=DialogueScene.splitter("\""+this.murkquote+"\"",70);
+		for(i=0;i<murkquotesplit.length;i++){
+				SegwayScene.textRenderer.render(murkquotesplit[i]).draw(100,470+(30*i));
 		}
-		shipDensity.draw(0,120);
-		SegwayScene.textRenderer.render("Enemy Encounter Rate : "+this.shiplikelihood+"%").draw(0,150);
-		if(this.asteroiddensity==0){
-			asteroidDensity=SegwayScene.textRenderer.render("Asteroid Density : None");
-		}else if(this.asteroiddensity<5){
-			asteroidDensity=SegwayScene.textRenderer.render("Asteroid Density : High");
-		}else if(this.asteroiddensity<10){
-			asteroidDensity=SegwayScene.textRenderer.render("Asteroid Density : Medium");
-		}else{
-			asteroidDensity=SegwayScene.textRenderer.render("Asteroid Density : Low");
-		}
-		asteroidDensity.draw(0,180);
-		SegwayScene.textRenderer.render("Asteroid Encounter Rate : "+this.asteroidlikelihood+"%").draw(0,210);
-		murkquotesplit=DialogueScene.splitter("Murk's Quote of the Day : \""+this.murkquote+"\"",50);
-			for(i=0;i<murkquotesplit.length;i++){
-				SegwayScene.textRenderer.render(murkquotesplit[i]).draw(0,240+(30*i));
-			}
-		SegwayScene.textRenderer.render("<Press Any Key To Continue>").draw(280,380);
+		Graphics2D.Draw.rectangle(185,95,460,40,255,255,255);
+		Graphics2D.Draw.rectangle(190,100,450,30,0,0,0);
+		VictoryScene.text_renderer.render("Press Any Key To Continue").draw(250,100);
+		
 	}
 
 

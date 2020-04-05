@@ -7,18 +7,32 @@ import Graphics2DText;
 
 class TitleScene:AbstractScene{
 	static field title;
-	static field text_renderer=FontResource.fromSystem("Consolas").getRenderer().setColor(255,255,255).setSize(20).setStyle(FontStyle.BOLD);
+	static field text_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(30).setStyle(FontStyle.BOLD);
+	static field titlebackground;
+	static field starfield=[];
+	static field titleaaron;
+	static field titlemurk;
+	
 	constructor(){
 		//imagemanager.wondertwinsactivate();
 		TitleScene.title=imagemanager.load("title.png");
+		TitleScene.titlebackground=imagemanager.load("title_background.png");
+		TitleScene.titleaaron=imagemanager.load("title_aaron.png");
+		TitleScene.titlemurk=imagemanager.load("title_murk.png");
+		for(i=0;i<80;i++){
+			TitleScene.starfield.add(new star(800,0,600));
+	}
 	}
 	
 	function render(){
-		Graphics2D.Draw.fill(130,130,255);
-		Graphics2D.Draw.rectangle(130,10,540,200,255,255,0);
-		TitleScene.text_renderer.render("A Space-Age Puzzle Game").draw(210,220);
+		Graphics2D.Draw.fill(0,0,0);
+		TitleScene.starfield.map((q)=>{q.flow();});
+		TitleScene.text_renderer.render("A Space-Age Puzzle Game").draw(210,400);
 		TitleScene.text_renderer.render("Press Any Key To Start").draw(210,500);
-		TitleScene.title.drawStretched(150,-20,500,200);
+		TitleScene.titleaaron.drawStretched(0,100,200,500);
+		TitleScene.titlemurk.drawStretched(500,50,400,550);
+		TitleScene.titlebackground.drawStretched(50,-100,700,600);
+		TitleScene.title.drawStretched(230,10,400,150);
 	}
 	
 	function update(inputManager,events){

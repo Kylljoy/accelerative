@@ -68,6 +68,7 @@ class GameScene : AbstractScene{
 	
 	field screwups=5;
 	field maxscrewups=5;
+	field finishscrewups=-1;
 	
 	field minboardsize=4;
 	field maxboardsize=4;
@@ -75,6 +76,10 @@ class GameScene : AbstractScene{
 	function setLevel(level){
 	
 	
+	}
+	
+	function setScrewUps(value){
+		this.screwups=value;
 	}
 	
 	
@@ -239,7 +244,11 @@ function prepGameplay(level){
 	this.asteroidLikelihood=levels.getLevelData(level)["asschance"];
 	this.minboardsize=levels.getLevelData(level)["boardmin"];
 	this.maxboardsize=levels.getLevelData(level)["boardmax"];
-	
+	if(level==1){
+		this.finishscrewups=5;
+	}else{
+		this.finishscrewups=-1;
+	}
 	
 	this.activewire=-1;
 	this.pallet.shuffle();
@@ -292,7 +301,10 @@ for (event : events) {
 
 	  }
 	  if(event.type==TwoCansAlpha4.EventType.MOUSE_RELEASE){
+			if(this.activewire>=0){
+			this.wires[this.activewire].newAttempt();
 			this.activewire=-1;
+			}
 	  }
 	  if(event.type== TwoCansAlpha4.EventType.MOUSE_MOVE){
 		click_coord=this.board_coord(event.x,event.y,this.boardxoffset+this.margin,this.boardyoffset+this.margin,this.blocksize,this.boardsize);
@@ -304,6 +316,7 @@ for (event : events) {
 						this.activewire=-1;
 					}
 			}else{
+			this.wires[this.activewire].newAttempt();
 			this.activewire=-1;
 		}
 		}
@@ -350,8 +363,13 @@ for (event : events) {
 	
 	if(dstm.arewethereyet()){
 		this.activeGameplay=false;
+		if(this.finishscrewups>=0){
+				SceneManager.victoryscene.results(this.finishscrewups,this.maxscrewups);
+				this.switchSceneFade(SceneManager.victoryscene);
+		}else{
 		SceneManager.victoryscene.results(this.maxscrewups-this.screwups,this.maxscrewups);
 		this.switchSceneFade(SceneManager.victoryscene);
+		}
 	}
 
 }

@@ -1,4 +1,6 @@
 import TwoCansAlpha4;
+import Dispatcher;
+
 
 class SceneManager{
 	//Keep the same scenes and reuse them with different parameters to preserve memory and reduce load time between them
@@ -9,8 +11,7 @@ class SceneManager{
 	static field victoryscene= new VictoryScene();
 
 	static field currentScene=0;
-	static field totalLevels=4;
-	
+	static field totalLevels=6;
 	
 	
 	static function prepGameplay(){

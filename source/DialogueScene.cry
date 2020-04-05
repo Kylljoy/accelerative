@@ -13,12 +13,13 @@ class DialogueScene:AbstractScene{
 	
 	
 	static field name_map={"aaron_angry":"AARON","aaron_pissed":"AARON","aaron_smile":"AARON","aaron_confused":"AARON","aaron_surprise":"AARON","murk":"MURK"};
-	static field text_types={"arial":FontResource.fromSystem("Arial").getRenderer().setColor(255,255,255).setSize(10),"consolas":FontResource.fromSystem("Consolas").getRenderer().setColor(255,255,255).setSize(10),"murk":FontResource.fromSystem("Comic Sans MS").getRenderer().setColor(255,255,255).setSize(10).setStyle(FontStyle.BOLD)};
+	static field text_types={"arial":FontResource.fromResource("aaronfont.ttf").getRenderer().setColor(255,255,255).setSize(15),"consolas":FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(10),"murk":FontResource.fromResource("murkfont.ttf").getRenderer().setColor(255,255,255).setSize(15).setStyle(FontStyle.BOLD)};
 	static field text_map={"aaron_angry":"arial","aaron_pissed":"arial","aaron_smile":"arial","aaron_confused":"arial","aaron_surprise":"arial","murk":"murk"};
 	static field images_to_load=["wire_puzzle_right","wire_puzzle_wrong","wire_puzzle","aaron_angry","aaron_confused","aaron_pissed","aaron_smile","aaron_surprise","murk"];
 	field d_set=0;
 	field d_page=0;
 	field active_image="";
+	field level=0;
 	
 	constructor(){
 		//imagemanager.wondertwinsactivate();
@@ -29,16 +30,17 @@ class DialogueScene:AbstractScene{
 		this.dialogue=[]; 
 		
 		for(i=0;i<35;i++){
-			DialogueScene.starfielda.add(new star(800,300,600));
+			DialogueScene.starfielda.add(new star(800,220,600));
 		}
 		for(i=0;i<5;i++){
-			DialogueScene.starfieldb.add(new star(800,300,600));
+			DialogueScene.starfieldb.add(new star(800,220,600));
 		}
 	}
 	
 	function prepForCutscene(level){
 		this.d_page=0;
 		this.d_set=0;
+		this.level=level;
 		this.active_image="";
 		this.dialogue=levels.getLevelDialogue(level);
 		DialogueScene.starfielda.map((q)=>{q.setspeed(1.0);});
@@ -48,8 +50,7 @@ class DialogueScene:AbstractScene{
 	function update(inputManager,events){
 		for(event:events){
 			if(event.type==TwoCansAlpha4.EventType.KEY&&event.down){
-				this.d_page++;
-				if((this.d_page)>=DialogueScene.splitter(this.dialogue[this.d_set]["d"],50).length/5){
+				if((this.d_page)>=(DialogueScene.splitter(this.dialogue[this.d_set]["d"],85).length)/6){
 					this.d_page=0;
 					if((this.d_set+1)>=this.dialogue.length){
 					//print(this.d_set);
@@ -70,6 +71,8 @@ class DialogueScene:AbstractScene{
 						}
 						this.d_set++;
 					}
+				}else{
+				this.d_page++;
 				}
 			}
 		}
@@ -78,24 +81,26 @@ class DialogueScene:AbstractScene{
 	static function splitter(textbody,length){
 		output=[];
 		working=textbody;
-		while(true){
-			output.add(working[:length]);
-			working=working[length:];
-			if(working.length<=length){
-				output[-1]+=working;
-				break;
-			}
-			
-			for(p=0;p<15;p++){
-				if(working[p]==' '){
-					output[-1]+=working[:p+1];
-					working=working[p+1:];
+		output.add("");
+		i=0;
+		while(working.length>0&&(i<=(working.length-2))){
+			i++;
+			if(working[i]==" "){
+				if(output[-1].length+2+working[:i+1].length>=length){
+					output.add(" ");
 				}
+				output[-1]+=" "+working[:i+1];
+				working=working[i+1:];
+				i=0;
 			}
-			if(working.length<=length){
-				output.add(working);
-				break;
-			}
+		}
+		if(working.length>0){
+		if(output[-1].length+2+working.length>=length){
+					output.add(" ");
+					output[-1]+=working;
+		}else{
+			output[-1]+=" "+working;
+		}
 		}
 		return output;
 	}
@@ -103,13 +108,14 @@ class DialogueScene:AbstractScene{
 	function render(){
 		DialogueScene.image_directory[this.dialogue[this.d_set]["s"]].drawStretched(20,20,100,150);
 		DialogueScene.text_types["consolas"].render(DialogueScene.name_map[this.dialogue[this.d_set]["s"]]).draw(20+((100-(10*DialogueScene.name_map[this.dialogue[this.d_set]["s"]].length))/2),180);
-		for(printerindex=(5*this.d_page);printerindex<Math.min((DialogueScene.splitter(this.dialogue[this.d_set]["d"],50).length),(5*this.d_page)+5);printerindex++){
-			DialogueScene.text_types[DialogueScene.text_map[this.dialogue[this.d_set]["s"]]].render(DialogueScene.splitter(this.dialogue[this.d_set]["d"],50)[printerindex]).draw(120,20+(20*(printerindex-(5*this.d_page))));
+		for(printerindex=(5*this.d_page);printerindex<Math.min((DialogueScene.splitter(this.dialogue[this.d_set]["d"],85).length),(5*this.d_page)+5);printerindex++){
+			DialogueScene.text_types[DialogueScene.text_map[this.dialogue[this.d_set]["s"]]].render(DialogueScene.splitter(this.dialogue[this.d_set]["d"],85)[printerindex]).draw(120,20+(20*(printerindex-(5*this.d_page))));
 	
 		}
 		DialogueScene.starfielda.map((q)=>{q.flow();});
-		DialogueScene.ship.drawStretched(200,300,400,200);
+		DialogueScene.ship.drawStretched(200,260,400,200);
 		DialogueScene.starfieldb.map((q)=>{q.flow();});
+		Graphics2D.Draw.line(0,220,800,220,5,255,255,255);
 		if(this.active_image!=""){
 			DialogueScene.image_directory[this.active_image].drawStretched(250,290,300,300);
 		}
