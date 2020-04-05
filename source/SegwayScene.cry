@@ -90,7 +90,7 @@ class SegwayScene:AbstractScene{
 		}
 		Graphics2D.Draw.rectangle(185,95,460,40,255,255,255);
 		Graphics2D.Draw.rectangle(190,100,450,30,0,0,0);
-		VictoryScene.text_renderer.render("Press Any Key To Continue").draw(250,100);
+		VictoryScene.text_renderer.render("Press Any Key To Continue").draw(320,100);
 		
 	}
 

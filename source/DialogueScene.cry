@@ -107,7 +107,7 @@ class DialogueScene:AbstractScene{
 	
 	function render(){
 		DialogueScene.image_directory[this.dialogue[this.d_set]["s"]].drawStretched(20,20,100,150);
-		DialogueScene.text_types["consolas"].render(DialogueScene.name_map[this.dialogue[this.d_set]["s"]]).draw(20+((100-(10*DialogueScene.name_map[this.dialogue[this.d_set]["s"]].length))/2),180);
+		DialogueScene.text_types[DialogueScene.text_map[this.dialogue[this.d_set]["s"]]].render(DialogueScene.name_map[this.dialogue[this.d_set]["s"]]).draw(10+((100-(10*DialogueScene.name_map[this.dialogue[this.d_set]["s"]].length))/2),180);
 		for(printerindex=(5*this.d_page);printerindex<Math.min((DialogueScene.splitter(this.dialogue[this.d_set]["d"],85).length),(5*this.d_page)+5);printerindex++){
 			DialogueScene.text_types[DialogueScene.text_map[this.dialogue[this.d_set]["s"]]].render(DialogueScene.splitter(this.dialogue[this.d_set]["d"],85)[printerindex]).draw(120,20+(20*(printerindex-(5*this.d_page))));
 	
