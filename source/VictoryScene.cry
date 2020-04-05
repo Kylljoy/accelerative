@@ -9,9 +9,9 @@ import Math;
 class VictoryScene:AbstractScene{
 	static field title;
 	static field titlebackground;
-	static field text_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(15).setStyle(FontStyle.BOLD);
-	static field penalty_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,0,0).setSize(15).setStyle(FontStyle.BOLD);
-	static field bonus_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(0,255,0).setSize(15).setStyle(FontStyle.BOLD);
+	static field text_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(25).setStyle(FontStyle.BOLD);
+	static field penalty_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,0,0).setSize(25).setStyle(FontStyle.BOLD);
+	static field bonus_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(0,255,0).setSize(25).setStyle(FontStyle.BOLD);
 	static field starfield=[];
 	field damage=6;
 	field maxdamage=7;
