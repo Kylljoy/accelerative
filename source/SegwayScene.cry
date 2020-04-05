@@ -22,9 +22,9 @@ class SegwayScene:AbstractScene{
 	field asteroidlikelihood=0;
 	static field starfieldmain=[];
 	static field ship=imagemanager.load("dstm.png");
-	static field textRenderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(15).setStyle(FontStyle.BOLD);
-	static field accentRenderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(200,200,0).setSize(15).setStyle(FontStyle.BOLD);
-	static field titleRenderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(15).setStyle(FontStyle.BOLD);
+	static field textRenderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(17).setStyle(FontStyle.BOLD);
+	static field accentRenderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(200,200,0).setSize(17).setStyle(FontStyle.BOLD);
+	static field titleRenderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(20).setStyle(FontStyle.BOLD);
 
 	constructor(){
 		SegwayScene.title=imagemanager.load("prepare.png");

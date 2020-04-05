@@ -13,7 +13,7 @@ class DialogueScene:AbstractScene{
 	
 	
 	static field name_map={"aaron_angry":"AARON","aaron_pissed":"AARON","aaron_smile":"AARON","aaron_confused":"AARON","aaron_surprise":"AARON","murk":"MURK"};
-	static field text_types={"arial":FontResource.fromResource("aaronfont.ttf").getRenderer().setColor(255,255,255).setSize(15),"consolas":FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(10),"murk":FontResource.fromResource("murkfont.ttf").getRenderer().setColor(255,255,255).setSize(15).setStyle(FontStyle.BOLD)};
+	static field text_types={"arial":FontResource.fromResource("aaronfont.ttf").getRenderer().setColor(255,255,255).setSize(15),"consolas":FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(20),"murk":FontResource.fromResource("murkfont.ttf").getRenderer().setColor(255,255,255).setSize(15).setStyle(FontStyle.BOLD)};
 	static field text_map={"aaron_angry":"arial","aaron_pissed":"arial","aaron_smile":"arial","aaron_confused":"arial","aaron_surprise":"arial","murk":"murk"};
 	static field images_to_load=["wire_puzzle_right","wire_puzzle_wrong","wire_puzzle","aaron_angry","aaron_confused","aaron_pissed","aaron_smile","aaron_surprise","murk"];
 	field d_set=0;
@@ -50,7 +50,7 @@ class DialogueScene:AbstractScene{
 	function update(inputManager,events){
 		for(event:events){
 			if(event.type==TwoCansAlpha4.EventType.KEY&&event.down){
-				if((this.d_page)>=(DialogueScene.splitter(this.dialogue[this.d_set]["d"],85).length)/6){
+				if((this.d_page)>=(DialogueScene.splitter(this.dialogue[this.d_set]["d"],60).length)/6){
 					this.d_page=0;
 					if((this.d_set+1)>=this.dialogue.length){
 					//print(this.d_set);
@@ -108,8 +108,8 @@ class DialogueScene:AbstractScene{
 	function render(){
 		DialogueScene.image_directory[this.dialogue[this.d_set]["s"]].drawStretched(20,20,100,150);
 		DialogueScene.text_types["consolas"].render(DialogueScene.name_map[this.dialogue[this.d_set]["s"]]).draw(10+((100-(10*DialogueScene.name_map[this.dialogue[this.d_set]["s"]].length))/2),180);
-		for(printerindex=(5*this.d_page);printerindex<Math.min((DialogueScene.splitter(this.dialogue[this.d_set]["d"],85).length),(5*this.d_page)+5);printerindex++){
-			DialogueScene.text_types[DialogueScene.text_map[this.dialogue[this.d_set]["s"]]].render(DialogueScene.splitter(this.dialogue[this.d_set]["d"],85)[printerindex]).draw(120,20+(20*(printerindex-(5*this.d_page))));
+		for(printerindex=(5*this.d_page);printerindex<Math.min((DialogueScene.splitter(this.dialogue[this.d_set]["d"],60).length),(5*this.d_page)+5);printerindex++){
+			DialogueScene.text_types[DialogueScene.text_map[this.dialogue[this.d_set]["s"]]].render(DialogueScene.splitter(this.dialogue[this.d_set]["d"],60)[printerindex]).draw(120,20+(20*(printerindex-(5*this.d_page))));
 	
 		}
 		DialogueScene.starfielda.map((q)=>{q.flow();});
