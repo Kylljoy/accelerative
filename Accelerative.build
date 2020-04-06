@@ -43,15 +43,7 @@
 		{
 			"name":"twocans",
 			"platform":"javascript-app",
-			"vars":[{ "name": "screen_width", "value": 800 },
-		{ "name": "screen_height", "value": 600 },
-		{ "name": "use_beta_endpoint", "value": false },
-		{ "name": "game_title", "value": "Accelerative" },
-		{ "name": "initial_scene", "value": "TitleScene" },
-		{ "name": "use_60_fps", "value": true },
-		{ "name": "enable_wasd", "value": true },
-		{ "name": "thumbnail", "value": "assets/thumbnail.png" },
-		{"name":"fontScaling","value":0.76}]
+			"vars":[{"name":"fontScaling","value":2.0}]
 		},
 		{
 			"name": "java",
