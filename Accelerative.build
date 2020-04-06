@@ -30,13 +30,18 @@
 		{ "name": "initial_scene", "value": "TitleScene" },
 		{ "name": "use_60_fps", "value": true },
 		{ "name": "enable_wasd", "value": true },
-		{ "name": "thumbnail", "value": "assets/thumbnail.png" }
+		{ "name": "thumbnail", "value": "assets/thumbnail.png" },
+		{"name":"fontScaling","value":1.0}
 	],
 	
 	"targets": [
 		{
 			"name": "csharp",
 			"platform": "csharp-app"
+		},
+		{
+			"name":"twocans",
+			"platform":"javascript-app"
 		},
 		{
 			"name": "java",

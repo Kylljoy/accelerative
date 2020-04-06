@@ -2,7 +2,7 @@
 import TwoCansAlpha4;
 import Graphics2D;
 import Graphics2DText;
-
+import Math;
 
 class SegwayScene:AbstractScene{
 	
@@ -22,9 +22,9 @@ class SegwayScene:AbstractScene{
 	field asteroidlikelihood=0;
 	static field starfieldmain=[];
 	static field ship=imagemanager.load("dstm.png");
-	static field textRenderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(17).setStyle(FontStyle.BOLD);
-	static field accentRenderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(200,200,0).setSize(17).setStyle(FontStyle.BOLD);
-	static field titleRenderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(20).setStyle(FontStyle.BOLD);
+	static field textRenderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(Math.floor(13*$var["fontScaling"])).setStyle(FontStyle.BOLD);
+	static field accentRenderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(200,200,0).setSize(Math.floor(13*$var["fontScaling"])).setStyle(FontStyle.BOLD);
+	static field titleRenderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(Math.floor($var["fontScaling"]*18)).setStyle(FontStyle.BOLD);
 
 	constructor(){
 		SegwayScene.title=imagemanager.load("prepare.png");
@@ -71,10 +71,9 @@ class SegwayScene:AbstractScene{
 		Graphics2D.Draw.line(400,190,400,410,1,150,150,150);
 		Graphics2D.Draw.line(150,430,650,430,1,150,150,150);
 		
-		SegwayScene.titleRenderer.render("Cargo Manifest").draw(185,170);
-		SegwayScene.titleRenderer.render("Today's Forcast").draw(460,175);
-		SegwayScene.titleRenderer.render("Murk's Quote of the Day").draw(280,440);
-	
+		
+		//Cargo Info (Type,Location,Distance,Screwups)
+		SegwayScene.titleRenderer.render("Cargo Manifest").draw(155,170);
 		SegwayScene.textRenderer.render("Current Location:").draw(170,200);
 		SegwayScene.accentRenderer.render(this.location).draw(240-((this.location.length/2)*10),230);
 		SegwayScene.textRenderer.render("Dropoff Distance:").draw(165,260);
@@ -84,13 +83,18 @@ class SegwayScene:AbstractScene{
 		SegwayScene.textRenderer.render("Fragility:").draw(200,380);
 		SegwayScene.accentRenderer.render(this.fragility+" Allowed Screwups").draw(145,405);
 	
+		//Forecast (Puzzle Difficulty, Ship Amount, Asteroid Amount
+		SegwayScene.titleRenderer.render("Today's Forecast").draw(440,175);
+	
+	
+		SegwayScene.titleRenderer.render("Murk's Quote of the Day").draw(280,440);
 		murkquotesplit=DialogueScene.splitter("\""+this.murkquote+"\"",70);
 		for(i=0;i<murkquotesplit.length;i++){
 				SegwayScene.textRenderer.render(murkquotesplit[i]).draw(100,470+(30*i));
 		}
 		Graphics2D.Draw.rectangle(185,95,460,40,255,255,255);
 		Graphics2D.Draw.rectangle(190,100,450,30,0,0,0);
-		VictoryScene.text_renderer.render("Press Any Key To Continue").draw(320,100);
+		VictoryScene.text_renderer.render("Press Any Key To Continue").draw(250,95);
 		
 	}
 

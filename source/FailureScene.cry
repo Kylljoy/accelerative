@@ -3,11 +3,12 @@
 import TwoCansAlpha4;
 import Graphics2D;
 import Graphics2DText;
+import Math;
 
 
 class FailureScene:AbstractScene{
 	static field title;
-	static field text_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(30).setStyle(FontStyle.BOLD);
+	static field text_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(Math.floor($var["fontScaling"]*30)).setStyle(FontStyle.BOLD);
 	static field titlebackground;
 	static field starfield=[];
 	constructor(){

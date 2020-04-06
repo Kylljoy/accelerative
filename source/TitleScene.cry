@@ -3,11 +3,11 @@
 import TwoCansAlpha4;
 import Graphics2D;
 import Graphics2DText;
-
+import Math;
 
 class TitleScene:AbstractScene{
 	static field title;
-	static field text_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(25);
+	static field text_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(Math.floor($var["fontScaling"]*25));
 	static field titlebackground;
 	static field starfield=[];
 	static field titleaaron;
@@ -27,8 +27,8 @@ class TitleScene:AbstractScene{
 	function render(){
 		Graphics2D.Draw.fill(0,0,0);
 		TitleScene.starfield.map((q)=>{q.flow();});
-		TitleScene.text_renderer.render("A Space-Age Puzzle Game").draw(230,400);
-		TitleScene.text_renderer.render("Press Any Key To Start").draw(230,500);
+		TitleScene.text_renderer.render("A Space-Age Puzzle Game").draw(240,400);
+		TitleScene.text_renderer.render("Press Any Key To Start").draw(240,500);
 		TitleScene.titleaaron.drawStretched(0,100,200,500);
 		TitleScene.titlemurk.drawStretched(500,50,400,550);
 		TitleScene.titlebackground.drawStretched(50,-100,700,600);
