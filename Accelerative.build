@@ -43,7 +43,7 @@
 		{
 			"name":"twocans",
 			"platform":"javascript-app",
-			"vars":[{"name":"fontScaling","value":2.0}]
+			"vars":[{"name":"fontScaling","value":1.32}]
 		},
 		{
 			"name": "java",
