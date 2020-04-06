@@ -27,7 +27,11 @@ class TitleScene:AbstractScene{
 	function render(){
 		Graphics2D.Draw.fill(0,0,0);
 		TitleScene.starfield.map((q)=>{q.flow();});
-		TitleScene.text_renderer.render("A Space-Age Puzzle Game").draw(240,400);
+		if(!($var["fontScaling"]<1.0)){
+		TitleScene.text_renderer.render("A Futuristic Puzzle Game").draw(240,400);
+		}else{
+				TitleScene.text_renderer.render("A Space-Age Puzzle Game").draw(240,400);
+		}
 		TitleScene.text_renderer.render("Press Any Key To Start").draw(240,500);
 		TitleScene.titleaaron.drawStretched(0,100,200,500);
 		TitleScene.titlemurk.drawStretched(500,50,400,550);

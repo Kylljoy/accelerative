@@ -31,7 +31,8 @@
 		{ "name": "use_60_fps", "value": true },
 		{ "name": "enable_wasd", "value": true },
 		{ "name": "thumbnail", "value": "assets/thumbnail.png" },
-		{"name":"fontScaling","value":1.0}
+		{"name":"fontScaling","value":1.0},
+	
 	],
 	
 	"targets": [
@@ -41,7 +42,8 @@
 		},
 		{
 			"name":"twocans",
-			"platform":"javascript-app"
+			"platform":"javascript-app",
+			"vars":[{"name":"fontScaling","value":0.76}]
 		},
 		{
 			"name": "java",

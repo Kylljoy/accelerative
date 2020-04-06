@@ -10,7 +10,7 @@ class SceneManager{
 	static field defeatscene=new FailureScene();
 	static field victoryscene= new VictoryScene();
 
-	static field currentScene=2;
+	static field currentScene=0;
 	static field totalLevels=6;
 	static field totalSavings=0;
 	
