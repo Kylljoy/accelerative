@@ -2,6 +2,7 @@ import TwoCansAlpha4;
 import Dispatcher;
 
 
+
 class SceneManager{
 	//Keep the same scenes and reuse them with different parameters to preserve memory and reduce load time between them
 	static field gamescene=new GameScene();
@@ -9,9 +10,10 @@ class SceneManager{
 	static field segwayscene=new SegwayScene();
 	static field defeatscene=new FailureScene();
 	static field victoryscene= new VictoryScene();
+	static field cutscene = new CutScene();
 
 	static field currentScene=0;
-	static field totalLevels=6;
+	static field totalLevels=17;
 	static field totalSavings=0;
 	
 	
@@ -26,5 +28,8 @@ class SceneManager{
 			SceneManager.currentScene=SceneManager.totalLevels;
 		}
 		SceneManager.dialoguescene.prepForCutscene(SceneManager.currentScene);
+		if(levels.level_gameplay[SceneManager.currentScene-1].contains("pay")&&levels.level_gameplay[SceneManager.currentScene-1].contains("bon")){
+			SceneManager.victoryscene.jobresults(levels.level_gameplay[SceneManager.currentScene-1]["pay"],levels.level_gameplay[SceneManager.currentScene-1]["bon"]);
+		}
 	}
 }

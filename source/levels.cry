@@ -1,15 +1,33 @@
 
 
+
 class levels{
 	static field level_gameplay=[
-		{"loc":"Comagan System","cargo":"Milk. Lots.","murk":"If at first you don't succeed, blame the failure on someone else","fragility":5,"dist":3,"ships":0,"shipchance":0,"asses":0,"asschance":0,"boardmin":4,"boardmax":4},
+		{"loc":"Comagan System","cargo":"Milk. Lots.","murk":"If at first you don't succeed, blame the failure on someone else","fragility":5,"dist":3,"ships":0,"shipchance":0,"asses":0,"asschance":0,"boardmin":4,"boardmax":4,"pay":0.3,"bon":0},
 		{"loc":"Agur System","cargo":"Clipboards","murk":"If you give a man a fish, he'll eat for a day. If you teach a man to fish, he'll eat for a year. If you give him a high-interest loan on the fishing rod, you'll never have to work another day in your life.","fragility":10,"dist":7,"ships":0,"shipchance":0,"asses":0,"asschance":0,"boardmin":4,"boardmax":4},
 		{"loc":"Wurz System","cargo":"Literal Trash","murk":"If a tree falls down in the forest and nobody's around to hear it, steal it and sell the lumber. Even if it's in a nature preserve, there are no witnesses","fragility":20,"dist":5,"ships":0,"shipchance":0,"asses":0,"asschance":0,"boardmin":4,"boardmax":5},
 		{"loc":"Tid System","cargo":"Lemon Juice","murk":"The early bird catches the worm. But that also means the early worm dies.","fragility":10,"dist":7,"ships":0,"shipchance":0,"asses":0,"asschance":0,"boardmin":5,"boardmax":5},
 		{"loc":"Outer Mars Orbit","cargo":"Eggs","murk":"You can't make an omlette without breaking a few eggs. You can't have a good time without breaking a few laws.","fragility":1,"dist":5,"ships":0,"shipchance":0,"asses":0,"asschance":0,"boardmin":4,"boardmax":6},
-		{"loc":"Oort Cloud","cargo":"Fruit","murk":"It takes a village to raise a child. It only takes one child to burn a village. Reminder to make sure your children like you.","fragility":20,"dist":7,"ships":0,"shipchance":0,"asses":0,"asschance":0,"boardmin":4,"boardmax":6}
-	
-	
+		{"loc":"Oort Cloud","cargo":"Fruit","murk":"It takes a village to raise a child. It only takes one child to burn a village. Reminder to make sure your children like you.","fragility":20,"dist":7,"ships":0,"shipchance":0,"asses":0,"asschance":0,"boardmin":4,"boardmax":6},
+		{"loc":"Viper 6","cargo":"Snakes","murk":"Don't bite the hand that feeds you. Kidnap it and hold it for ransom instead.","fragility":20,"dist":7,"ships":20,"shipchance":60,"asses":0,"asschance":0,"boardmin":5,"boardmax":5,"pay":200,"bon":50},
+		{"loc":"Ferman System","cargo":"Salt","murk":"If you think we're in a computer simulation, you're wrong. We're actually in a really complex game of CandyLand","fragility":20,"dist":5,"ships":10,"shipchance":80,"asses":0,"asschance":0,"boardmin":5,"boardmax":6,"pay":140,"bon":60},
+		{"loc":"Utopia","cargo":"Guns","murk":"Guns don't kill people. The bullets do.","fragility":10,"dist":9,"ships":6,"shipchance":30,"asses":0,"asschance":0,"boardmin":5,"boardmax":6,"pay":300,"bon":75},
+		{"loc":"Mortium 99","cargo":"Bodies","murk":"A bird in the hand is dinner.","fragility":15,"dist":9,"ships":8,"shipchance":80,"asses":0,"asschance":0,"boardmin":4,"boardmax":8,"pay":200,"bon":150},
+		{"loc":"Polygon System","cargo":"United States Constitution","murk":"Tip to not pay taxes : Don't","fragility":8,"dist":8,"ships":5,"shipchance":50,"asses":0,"asschance":0,"boardmin":5,"boardmax":8,"pay":400,"bon":350},
+		
+		{"loc":"Lipsum System","cargo":"Tea","murk":"A good wife knows her way around children. A great wife knows her way around a shotgun","fragility":10,"dist":6,"ships":4,"shipchance":90,"asses":0,"asschance":0,"boardmin":4,"boardmax":9,"pay":200,"bon":50},
+		
+		{"loc":"Jargoon 8","cargo":"Half Life 3","murk":"Reminder : If you find yourself in checkmate, Queens are better than Pawns, but fire trumps all","fragility":1,"dist":5,"ships":4,"shipchance":40,"asses":0,"asschance":0,"boardmin":7,"boardmax":9,"pay":400,"bon":350},
+		
+		{"loc":"Planet #4546B","cargo":"Ice Water","murk":"People in Hell want Ice Water. That, and better reception.","fragility":9,"dist":5,"ships":0,"shipchance":0,"asses":12,"asschance":100,"boardmin":4,"boardmax":7,"pay":700,"bon":400},
+		
+		{"loc":"Planet Ikea","cargo":"Furgenburd Norshelk","murk":"Early to bed, Early to rise makes a man healthy, wealthy, and a good target for mugging","fragility":7,"dist":8,"ships":0,"shipchance":0,"asses":6,"asschance":80,"boardmin":5,"boardmax":9,"pay":900,"bon":200},
+		
+		{"loc":"Lorem Ipsum","cargo":"Paper","murk":"Never trust a man in a suit. Trust men in dresses, though, because they have spunk.","fragility":9,"dist":10,"ships":7,"shipchance":90,"asses":10,"asschance":80,"boardmin":5,"boardmax":7,"pay":1200,"bon":700},
+		
+		
+		{"loc":"Fin System","cargo":"Gold","murk":"Endings are just for game developers who haven't figured out how to make an endless mode yet.","fragility":9,"dist":14,"ships":5,"shipchance":60,"asses":5,"asschance":80,"boardmin":5,"boardmax":13,"pay":3000,"bon":1000}
+
 	];
 	
 	static field level_dialogue=[
@@ -23,7 +41,29 @@ class levels{
 		
 		[{"s":"aaron_smile","d":"Hey"},{"s":"aaron_smile","d":"Hey"},{"s":"aaron_smile","d":"Hey, Murk"},{"s":"aaron_smile","d":"Hey"},{"s":"aaron_smile","d":"Hey"},{"s":"aaron_smile","d":"Hey, Murk"},{"s":"aaron_smile","d":"Hey"},{"s":"aaron_smile","d":"Hey"},{"s":"murk","d":"What?"},{"s":"aaron_smile","d":"We're shipping eggs"},{"s":"murk","d":"So?"},{"s":"aaron_smile","d":"Isn't that..."},{"s":"aaron_smile","d":"EGGscelent?!"},{"s":"murk","d":"..."},{"s":"murk","d":"..."},{"s":"murk","d":"..."},{"s":"murk","d":"I will kill you where you stand"},{"s":"aaron_surprise","d":"..."},{"s":"murk","d":"..."},{"s":"aaron_surprise","d":"..."},{"s":"murk","d":"..."},{"s":"aaron_surprise","d":"..."},{"s":"murk","d":"..."}],
 		
-		[{"s":"murk","d":"Heheheh"},{"s":"aaron_confused","d":"What?"},{"s":"murk","d":"I just got the 'EGGscelent' joke"},{"s":"aaron_angry","d":"Of course."},{"s":"aaron_confused","d":"So what do you think?"},{"s":"murk","d":"Puns deserve to burn in the seven planes of hell, as do the people who tell them"},{"s":"aaron_surprise","d":"I'll just get back to flying then"},{"s":"murk","d":"watch your back"},{"s":"aaron_surprise","d":"What?"},{"s":"murk","d":"Just get back to flying"},{"s":"aaron_surprise","d":"I'll get back to flying"},{"s":"murk","d":"Good idea"}]
+		[{"s":"murk","d":"Heheheh"},{"s":"aaron_confused","d":"What?"},{"s":"murk","d":"I just got the 'EGGscelent' joke"},{"s":"aaron_angry","d":"Of course."},{"s":"aaron_confused","d":"So what do you think?"},{"s":"murk","d":"Puns deserve to burn in the seven planes of hell, as do the people who tell them"},{"s":"aaron_surprise","d":"I'll just get back to flying then"},{"s":"murk","d":"watch your back"},{"s":"aaron_surprise","d":"What?"},{"s":"murk","d":"Just get back to flying"},{"s":"aaron_surprise","d":"I'll get back to flying"},{"s":"murk","d":"Good idea"}],
+		
+		[{"s":"murk","d":"Ummmm.... Captain?"},{"s":"aaron_angry","d":"Space Jesus - What now, Murk?"},{"s":"murk","d":"We're entering V'Pag Territory"},{"s":"aaron_surprise","d":"As in the V'Pag Space Pirates?"},{"s":"murk","d":"Yeah"},{"s":"aaron_surprise","d":"We're Screwed"},{"s":"murk","d":"Don't say that just yet"},{"s":"aaron_surprise","d":"What do you mean? They've got fighters who are trained in blowing up passing vessels"},{"s":"aaron_surprise","d":"Meanwhile, we're a merchant vessel with no weapons..."},{"s":"murk","d":"..."},{"s":"aaron_confused","d":"You put weapons onboard, didn't you."},{"s":"murk","d":"I plead to the second"},{"s":"aaron_confused","d":"You mean the fifth"},{"s":"murk","d":"No, the second. I have the right to bear arms. Or deadly lasers. Potato/Tomato."},{"s":"aaron_confused","d":"Okay, we'll just gloss over the fact that you illegally installed military-grade weapons on a ship literally the size of a minivan. How do I use them?"},{"s":"murk","d":"Well, normally you need two crew members to use a deadly laser. One to drive the ship, and one to aim and shoot. But, because I'm on parole and can't legally kill a man..."},{"s":"aaron_confused","d":"...That hasn't stopped you before..."},{"s":"murk","d":"...you'll have to fire it."},{"s":"murk","d":"(Demonstrating Image Goes Here) Now, I've set the turret to automatically rotate. It'll aim through the eight sectors that we'll need to hit. If you look at your radar to the right of the wireboard, you'll see a blue line highlighting the current sector you're aiming at."},{"s":"murk","d":"We're lucky for now that the V'Pag are idiots and don't have stealth sheilding right now, so we'll be able to seem them on the radar. They'll be little red dots."},{"s":"murk","d":"When the blue line lines up with the sector the ship's in, hit the red fire button to blast that sonnuvagun out of the sky."},{"s":"murk","d":"You'll have some time to react before they hit the ship. Just don't let them get too close to use before you fire, as it could damage the carge. Does this all make sense?"},{"s":"aaron_confused","d":"Shoot the red dots when the line is pointing at them. Got it."},{"s":"murk","d":"Good. Now go get some Space Pirates."}],
+		
+		[{"s":"aaron_smile","d":"Holy Space Crap!"},{"s":"murk","d":"Nobody says that."},{"s":"aaron_smile","d":"Murk! We got paid a TON more for making that delivery through pirate territory!"},{"s":"murk","d":"So?"},{"s":"aaron_smile","d":"If we keep doing deliveries through warzones and pirates and empty space, we'll be able to save up enough money to fix our ship faster!"},{"s":"murk","d":"So we're going to keep flying through pirate-infested areas and shoot down enemy ships?"},{"s":"aaron_smile","d":"Exactly"},{"s":"murk","d":"This can only end badly"}],
+		
+		[{"s":"aaron_confused","d":"Murk, do you find it weird that we're delivering guns to Utopia, of all places?"},{"s":"aaron_confused","d":"Like, if they were perfectly happy, why would they need guns?"},{"s":"murk","d":"Sounds like my kind of Utopia."},{"s":"aaron_angry","d":"Of course"}],
+		
+		[{"s":"aaron_surprise","d":"Oh my god"},{"s":"aaron_surprise","d":"That was terrible"},{"s":"aaron_surprise","d":"We delivered the guns, and they just..."},{"s":"aaron_surprise","d":"...They just..."},{"s":"murk","d":"Like I said."},{"s":"murk","d":"My kind of Utopia"}],
+		
+		[{"s":"aaron_confused","d":"I can't believe they trusted us enough to ship the constitution of all things"},{"s":"murk","d":"I can. After all, we're the only idiots to ship it through a literal warzone. Especailly for less than $1,000"},{"s":"aaron_angry","d":"Wait, we could've asked for MORE money?"},{"s":"murk","d":"Yep"},{"s":"aaron_pissed","d":"Space-God Damn It."},{"s":"murk","d":"I wouldn't trust the government to pay us anyways"},{"s":"aaron_confused","d":"Why?"},{"s":"murk","d":"You know the capitol building?"},{"s":"aaron_confused","d":"Yeah?"},{"s":"murk","d":"They've got wolves frozen in the basement"},{"s":"aaron_confused","d":"Sure"}],
+		
+		[{"s":"aaron_smile","d":"You know, Murk, you're not the worst crew member."},{"s":"murk","d":"Mhmm"},{"s":"aaron_smile","d":"I mean it. Besides being a pretty lazy engineer, you make good company and you've saved my ass by installing this laser."},{"s":"aaron_smile","d":"Not to mention, you KILL it on karaoke night."},{"s":"murk","d":"Mhm"}],
+		
+		[{"s":"aaron_smile","d":"Murk, I think you may actually be my closest frined"},{"s":"murk","d":"Is now a bad time to mention I invested all our savings in gum?"},{"a":"setsavings","v":10},{"s":"aaron_pissed","d":"WHAT?!"}],
+		
+		[{"s":"murk","d":"Captain - "},{"s":"aaron_pissed","d":"WHAT?!"},{"s":"murk","d":"Still angry about the whole, 'Invested it all in gum' thing, huh?"},{"s":"aaron_pissed","d":"Ya think?!"},{"s":"murk","d":"Well, I just thought you should know that we've left civilized space and are approaching the outer bounds of the mapped universe, which means -"},{"s":"aaron_confused","d":"- Asteroids"},{"s":"murk","d":"Yes"},{"s":"aaron_confused","d":"Do we have shields?"},{"s":"murk","d":"Yes, but - "},{"s":"aaron_angry","d":"But what?"},{"s":"murk","d":"Because of the laser's power draw, we can only activate one of the three shields at once. But don't worry, we can improvise!"},{"s":"murk","d":"(Image goes here) The early warning system to the right of the wireboard will show you where the asteroids are coming from."},{"s":"murk","d":"When you see one, just move the shield to the corresponding sector by pressing the white button below it."},{"s":"murk","d":"You'll have to wait for the asteroid to hit, so keep the shield in that sector until the asteroid passes"},{"s":"murk","d":"Got it?"},{"s":"aaron_confused","d":"Protect the ship by moving the shields to block the asteroids. Got it."},{"s":"murk","d":"Good. I'm out of gum, so let's deliver this shipment so I can buy more."}],
+		
+		[{"s":"aaron_smile","d":"Well that was exhilirating"},{"s":"murk","d":"You don't say. More asteroids incoming, by the way"},{"s":"aaron_smile","d":"I'm ready for them"}],
+		
+		[{"s":"murk","d":"I've got good news and bad news"},{"s":"aaron_confused","d":"Bad news first."},{"s":"murk","d":"The pirates have caught up to us."},{"s":"aaron_confused","d":"Of course. And the good news?"},{"s":"murk","d":"They've released a new flavour of spearmint gum!"}],
+		
+		[{"s":"murk","d":"This is the last level"},{"s":"aaron_confused","d":"Of what?"},{"s":"murk","d":"Of the video game."},{"s":"aaron_surprise","d":"Wait, we're in a video game?!"},{"s":"murk","d":"..."},{"s":"murk","d":"....no"}]
 	
 	
 	];

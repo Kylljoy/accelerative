@@ -7,7 +7,7 @@ import Math;
 
 class TitleScene:AbstractScene{
 	static field title;
-	static field text_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(Math.floor($var["fontScaling"]*25));
+	static field text_renderer=FontResource.fromResource("pixy.ttf").getRenderer().setColor(255,255,255).setSize(Math.floor($var["fontScaling"]*20));
 	static field titlebackground;
 	static field starfield=[];
 	static field titleaaron;

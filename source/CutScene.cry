@@ -1,0 +1,56 @@
+import TwoCansAlpha4;
+import Math;
+import Graphics2D;
+
+class CutScene : AbstractScene{
+	field sync;
+	field sprites;
+	field actions=[["setmodehybrid"],["dialogue",{"s":"murk","d":"I am speaking"}]];
+	field scenelevel=0;
+	field actionkey=1;
+	
+	field mode = 0;
+	field d_page=0;
+	// 1 - Hybrid, 2 - Points
+	
+	// Axtions
+	// (1) LoadSprite (Sprite,Location,Scaling)
+	// (2) MoveSprite :  (Sprite, Location, Time)
+	// (3) SetFocus : (Sprite)
+	// (4) MoveFocus : (Sprite, Time)
+	// (5) SetBackground : (Plate)
+	// (6) Dialogue : (Dialogue)
+	// (7) SetPlate : (Plate)
+	// (7) SetModePlates
+	// (8) SetModeHybrid
+	// (9) KenBurnsIN (Point,Scaling,Time)
+	
+
+	constructor(){
+		for(image:DialogueScene.images_to_load){
+			DialogueScene.image_directory[image]=imagemanager.load(image+".png");
+		}
+	
+	}
+	
+	
+	function update(inputManager,events){
+	
+	}
+	
+	function render(){
+		if(this.mode==0 && this.actions[this.actionkey][0]=="dialogue"){
+		DialogueScene.image_directory[this.actions[this.actionkey][1]["s"]].drawStretched(20,20,100,150);
+		DialogueScene.text_types["consolas"].render(DialogueScene.name_map[this.actions[this.actionkey][1]["s"]]).draw(10+((100-(10*DialogueScene.name_map[this.actions[this.actionkey][1]["s"]].length))/2),180);
+		for(printerindex=(5*this.d_page);printerindex<Math.min((DialogueScene.splitter(this.actions[this.actionkey][1]["d"],80).length),(5*this.d_page)+5);printerindex++){
+			DialogueScene.text_types[DialogueScene.text_map[this.actions[this.actionkey][1]["s"]]].render(DialogueScene.splitter(this.actions[this.actionkey][1]["d"],80)[printerindex]).draw(120,20+(20*(printerindex-(5*this.d_page))));
+	
+		}
+		Graphics2D.Draw.line(0,220,800,220,5,255,255,255);
+	}
+	}
+	
+	
+
+
+}

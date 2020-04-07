@@ -95,7 +95,8 @@ class GameScene : AbstractScene{
 		for(i=0;i<5;i++){
 			this.starfieldb.add(new star(this.windowWidth,0,255));
 		}
-		Dispatcher.setRecurringCallback(()=>{if(this.activeGameplay){this.incoming_ships.map((q)=>{q.closer();});}},0.1);
+		
+		Dispatcher.setRecurringCallback(()=>{if(this.activeGameplay){this.incoming_ships.map((q)=>{q.closer();});}},0.4);
 		Dispatcher.setRecurringCallback(()=>{if(this.activeGameplay){this.asteroids.map((q)=>{q.closer();});}},0.1);
 		Dispatcher.setRecurringCallback(()=>{this.active_sector++;this.active_sector=this.active_sector%8;},0.5);
 		Dispatcher.setRecurringCallback(()=>{
@@ -236,19 +237,14 @@ function prepLevelForGameplay(){
 function prepGameplay(level){
 	this.maxscrewups=levels.getLevelData(level)["fragility"];
 	dstm.settarget(levels.getLevelData(level)["dist"]);
-	this.are_ships=levels.getLevelData(level)["ships"]==0;
+	this.are_ships=levels.getLevelData(level)["ships"]!=0;
 	this.shipDensity=levels.getLevelData(level)["ships"];
 	this.shipLikelihood=levels.getLevelData(level)["shipchance"];
-	this.are_asteroids=levels.getLevelData(level)["asses"]==0;
+	this.are_asteroids=levels.getLevelData(level)["asses"]!=0;
 	this.asteroidDensity=levels.getLevelData(level)["asses"];
 	this.asteroidLikelihood=levels.getLevelData(level)["asschance"];
 	this.minboardsize=levels.getLevelData(level)["boardmin"];
 	this.maxboardsize=levels.getLevelData(level)["boardmax"];
-	if(level==1){
-		this.finishscrewups=5;
-	}else{
-		this.finishscrewups=-1;
-	}
 	
 	this.activewire=-1;
 	this.pallet.shuffle();
@@ -349,11 +345,13 @@ for (event : events) {
 	}
 	if(this.incoming_ships.map((q)=>{return q.hit();}).contains(true)){
 		this.incoming_ships=this.incoming_ships.filter((q)=>{return !q.hit();});
+		dstm.hit();
 		this.screwups--;
 	}
-	
+	this.asteroids=this.asteroids.filter((q)=>{return q.unblocked(this.shield_set);});
 	if(this.asteroids.map((q)=>{return q.hit();}).contains(true)){
 		this.asteroids=this.asteroids.filter((q)=>{return !q.hit();});
+		dstm.hit();
 		this.screwups--;
 	}
 	if(this.screwups<=0){

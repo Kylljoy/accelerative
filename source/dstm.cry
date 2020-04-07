@@ -1,12 +1,13 @@
 
 import Graphics2D;
 import Math;
-
+import Random;
 class dstm{
 	static field ship_image;
 	static field distance_travelled=0;
 	static field total_distance=3;
 	static field flame_frame=0;
+	static field hitcount=0;
 	static field flame_count=0;
 	static field flame_images=[];
 
@@ -34,12 +35,21 @@ class dstm{
 			dstm.flame_images[dstm.flame_count/10].drawStretched(155,45,400,200);
 		}
 		dstm.ship_image.drawStretched((dstm.distance_travelled/(50*dstm.total_distance))*760,0,50,20);
-		dstm.ship_image.drawStretched(800/6,0,(1600)/3,255);
+		if(dstm.hitcount>0){
+		dstm.hitcount--;
+		dstm.ship_image.drawStretched((800/6)+Random.randomInt(0,30),Random.randomInt(0,30)-20,(1600)/3,255);
+		}else{
+		dstm.ship_image.drawStretched((800/6),-20,(1600)/3,255);
+		}
 	
 	}
 	
 	static function arewethereyet(){
 		return dstm.distance_travelled>=(50*dstm.total_distance);
+	}
+	
+	static function hit(){
+		dstm.hitcount=50;
 	}
 	
 	static function resetodometer(){

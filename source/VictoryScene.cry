@@ -74,7 +74,11 @@ class VictoryScene:AbstractScene{
 		VictoryScene.bonus_renderer.render("Recieved Payment :  "+VictoryScene.trailingzeros((((((this.maxdamage)-this.damage)*100)/(this.maxdamage))*this.payment)/100.0)+"$").draw(280-(((Math.floor(Math.log10(1+(((((this.maxdamage)-this.damage)*100)/(this.maxdamage))*this.payment)/100.0))+2)/2)*12),360);
 		
 		if(this.damage==0){
+		if(this.bonus>0){
 		VictoryScene.bonus_renderer.render("No Damage Bonus :  "+VictoryScene.trailingzeros(this.bonus+0.0)+"$").draw(285-(((Math.floor(Math.log10(this.bonus))+2)/2)*10),380);
+		}else{
+		VictoryScene.bonus_renderer.render("No Damage Bonus :  0.0$").draw(265,380);
+		}
 		VictoryScene.text_renderer.render("Total Profit :  "+VictoryScene.trailingzeros(this.bonus+0.0+this.payment)+"$").draw(275-(((Math.floor(Math.log10(this.bonus+0.0+this.payment+1))+2)/2)*15),420);
 		}else{
 			VictoryScene.penalty_renderer.render("No Damage Bonus :  0.00$").draw(280,380);
